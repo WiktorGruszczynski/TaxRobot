@@ -1,0 +1,17 @@
+name=Thomas
+vorname=Muller
+strasse=schliefstrasse
+nummer=89
+zusatz=suzaltz
+PLZ=42-200
+ort=Hamburg
+geburtsdatum=11.05.1998
+AHVN13=756.9167.3225.90
+zivilstand=ledig
+konfession=reformiert
+PID=4
+pensionskasse=1
+gemeinde=Zürich
+beruf=Koch
+telefon=1234567890
+email=example@office.com
