@@ -43,11 +43,12 @@ public class Keyboard {
             robot.keyPress(keyCode);
         }
 
+        robot.delay(5);
+
         for (int keyCode: keycodes){
             robot.keyRelease(keyCode);
         }
 
-        robot.delay(1);
     }
 
     private static int[] charToKeycodes(char chr){
@@ -57,7 +58,6 @@ public class Keyboard {
                     SHIFT_CHARACTERS_MAP.get(chr)
             };
         }
-
 
         return new int[]{
                 KeyEvent.getExtendedKeyCodeForChar(chr)
@@ -72,6 +72,10 @@ public class Keyboard {
         }
     }
 
+    public static void sleep(int ms){
+        robot.delay(ms);
+    }
+
     public static void tab(){
         pressKeycodes(KeyEvent.VK_TAB);
         robot.delay(10);
@@ -81,6 +85,11 @@ public class Keyboard {
         for (int i=0; i<steps; i++){
             tab();
         }
+    }
+
+    public static void shiftTab(){
+        pressKeycodes(KeyEvent.VK_SHIFT, KeyEvent.VK_TAB);
+        robot.delay(5);
     }
 
     public static void space(){
@@ -99,7 +108,6 @@ public class Keyboard {
 
     public static void arrowDown(int steps){
         for (int i=0; i<steps; i++){
-            System.out.println(i);
             arrowDown();
         }
     }
@@ -115,8 +123,12 @@ public class Keyboard {
         }
     }
 
-    public static void sleep(int ms){
-        robot.delay(ms);
+    public static void altLeft(){
+        pressKeycodes(KeyEvent.VK_ALT, KeyEvent.VK_LEFT);
+    }
+
+    public static void alrRight(){
+        pressKeycodes(KeyEvent.VK_ALT, KeyEvent.VK_RIGHT);
     }
 
 }

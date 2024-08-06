@@ -4,6 +4,7 @@ import com.sun.jna.platform.win32.WinDef.*;
 import org.example.tools.Keyboard;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 
 public class Launcher {
@@ -28,14 +29,33 @@ public class Launcher {
 
     private void isAlive(){
         final int PID = WindowsApi.getProcessIdByWindowHandle(hwnd);
-        int currentWindowPid = PID;
+        int currentWindowPid;
+        String currentWindowTitle = "";
 
 
-        while (currentWindowPid == PID){
-            currentWindowPid = WindowsApi.getProcessIdByWindowHandle(WindowsApi.getForegroundWindow());
+
+
+        while (true){
+            HWND foregroundWindow = WindowsApi.getForegroundWindow();
+
+            currentWindowPid = WindowsApi.getProcessIdByWindowHandle(foregroundWindow);
+            currentWindowTitle = WindowsApi.getWindowTitle(foregroundWindow);
+
+
+            if (currentWindowPid!=PID){
+                throw new RuntimeException("Program Interrupted");
+            }
+
+            if (currentWindowTitle.startsWith("Probleme")){
+                throw new RuntimeException("Problem occured while filling tax declaration");
+            }
+
+
+
+
+
+
         }
-
-        throw new RuntimeException("Program Interrupted");
     }
 
 

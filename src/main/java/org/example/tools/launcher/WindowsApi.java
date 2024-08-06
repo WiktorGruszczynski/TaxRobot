@@ -29,7 +29,8 @@ class WindowsApi {
 
 
     public static String getWindowTitle(HWND hwnd){
-        int length = user32.GetWindowTextLength(hwnd);
+        int length = 256;
+
         char[] text = new char[length];
         user32.GetWindowText(hwnd, text, length+1);
         return charArrayToString(text);

@@ -1,4 +1,4 @@
-package org.example.app.schemas;
+package org.example.app.schemas.form;
 
 
 import org.example.app.schemas.input.Input;
@@ -12,14 +12,14 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 
-public class Form {
+public abstract class Form{
     private String className;
-
 
     private void setTextInput(Field field, String value) throws IllegalAccessException {
         TextInput textInput = (TextInput) field.get(this);
         textInput.set(value);
     }
+
 
     private void setRadioInput(Field field, String value) throws IllegalAccessException {
         RadioInput radioInput = (RadioInput) field.get(this);
@@ -33,7 +33,7 @@ public class Form {
                 radioInput.set(false);
             }
             else {
-                throw new RuntimeException("RadioInput has incorrect value: " + field.getName());
+                throw new RuntimeException(className + "  RadioInput has incorrect value: " + field.getName());
             }
         }
     }
@@ -44,7 +44,7 @@ public class Form {
         select.set(value);
 
         if (select.getIndex() == -1){
-            throw new RuntimeException(value + " is not present in options - " + className);
+            throw new RuntimeException(className + "  " + value + " is not present in options - ");
         }
     }
 
@@ -75,10 +75,30 @@ public class Form {
     }
 
 
-    public void loadFromFile(String path){
-        Map<String, String> map = DataReader.getDataMapFromFile(path);
-        className = this.getClass().getName();
+    public boolean isEmpty(){
+        for (Field field: this.getClass().getDeclaredFields()){
+            try {
+                field.setAccessible(true);
 
+                if (Input.class.isAssignableFrom(field.getType())){
+                    Input<?> input = (Input<?>) field.get(this);
+                    if (input.get() != null){
+                        return false;
+                    }
+                }
+
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return true;
+    }
+
+
+    public void loadFromMap(Map<String, String> map) {
+        className = this.getClass().getName();
 
         for (Field field: this.getClass().getDeclaredFields()){
             String fieldName = field.getName();
@@ -95,14 +115,28 @@ public class Form {
     }
 
 
+    public void loadFromFile(String path){
+        loadFromMap(DataReader.getDataMapFromFile(path));
+    }
+
+
     public String toString(){
         Field[] fields = this.getClass().getDeclaredFields();
         StringBuilder stringBuilder = new StringBuilder("{\n");
 
-        for (Field field: fields){
+        for (int i=0; i<fields.length; i++){
+            Field field = fields[i];
             field.setAccessible(true);
             try {
-                stringBuilder.append("\t" + field.getName() + ": " +  field.get(this) + ",\n");
+                stringBuilder
+                        .append("\t")
+                        .append(field.getName())
+                        .append(": ")
+                        .append(field.get(this));
+
+                if (i<fields.length-1){
+                    stringBuilder.append(",\n");
+                }
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -154,5 +188,11 @@ public class Form {
     protected void move(){
         Keyboard.tab();
     }
+
+    protected void move(int steps){
+        Keyboard.tab(steps);
+    }
+
+    public abstract void fill();
 
 }

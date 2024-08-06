@@ -16,14 +16,8 @@ class Main {
         launcher.listen();
 
         taxManager.personalData.loadFromFile("personal-data.txt");
+        taxManager.wageStatementTable.loadFromFile("wage-statement.txt");
 
         taxManager.fill();
-
-
     }
 }
-
-
-
-
-
