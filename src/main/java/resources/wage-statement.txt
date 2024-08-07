@@ -4,6 +4,5 @@ arbeitGeber=Bosh
 nettolohn=20000
 
 von=02.06.2023
-bis=31.12.2023
 arbeitGeber=Ford
 nettolohn=35000

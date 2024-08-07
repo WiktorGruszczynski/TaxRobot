@@ -1,13 +1,14 @@
 package org.example.app;
 
-import org.example.app.forms.PersonalData;
-import org.example.app.tables.WageStatementTable;
+import org.example.app.resources.forms.PersonalData;
+import org.example.app.resources.tables.WageStatementTable;
 import org.example.tools.Keyboard;
-import org.example.tools.launcher.Launcher;
+import org.example.tools.Launcher;
 
 
 public class TaxManager {
     private final Launcher launcher;
+    private final String EXTENSION = ".ptax23";
     public final PersonalData personalData = new PersonalData();
     public final WageStatementTable wageStatementTable = new WageStatementTable();
 
@@ -27,13 +28,14 @@ public class TaxManager {
     }
 
     private void waitForFormularWindow(){
-        while (!launcher.getCurrentWindowTitle().endsWith(".ptax23")){
+        while (!launcher.getCurrentWindowTitle().endsWith(EXTENSION)){
         }
     }
 
     private void nextPage(){
+        waitForFormularWindow();
         Keyboard.alrRight();
-        Keyboard.sleep(300);
+        Keyboard.sleep(800);
     }
 
     private void next(){
@@ -43,11 +45,12 @@ public class TaxManager {
     public void fill(){
         selectMainMenuOption(0);
         waitForFormularWindow();
-        Keyboard.sleep(100);
+        Keyboard.sleep(250);
         selectInnerMenuOption(2);
         Keyboard.sleep(350);
 
         personalData.fill();
+
 
         nextPage();
 

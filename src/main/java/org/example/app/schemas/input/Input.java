@@ -1,6 +1,6 @@
 package org.example.app.schemas.input;
 
-public class Input<T> {
+public abstract class Input<T> {
     private final boolean required;
     protected T value;
 
@@ -21,6 +21,6 @@ public class Input<T> {
     }
 
     public String toString(){
-        return "" + value;
+        return String.valueOf(value);
     }
 }

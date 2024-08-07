@@ -1,4 +1,4 @@
-package org.example.app.forms;
+package org.example.app.resources.forms;
 
 import org.example.app.schemas.form.Form;
 import org.example.app.schemas.input.RadioInput;

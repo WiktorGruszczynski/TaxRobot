@@ -193,6 +193,10 @@ public abstract class Form{
         Keyboard.tab(steps);
     }
 
+    protected void sleep(int ms){
+        Keyboard.sleep(ms);
+    }
+
     public abstract void fill();
 
 }

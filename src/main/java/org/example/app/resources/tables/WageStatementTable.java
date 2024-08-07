@@ -1,4 +1,4 @@
-package org.example.app.tables;
+package org.example.app.resources.tables;
 
 
 
@@ -6,7 +6,7 @@ package org.example.app.tables;
 
 
 
-import org.example.app.forms.WageStatement;
+import org.example.app.resources.forms.WageStatement;
 import org.example.app.schemas.form.Form;
 import org.example.app.schemas.table.Table;
 
@@ -32,10 +32,13 @@ public class WageStatementTable extends Table{
         for (Form form:  getRows()){
             WageStatement wageStatement = (WageStatement) form;
             wageStatement.fill();
+            sleep(10);
         }
 
         move(4);
         close();
+
+
 
     }
 
