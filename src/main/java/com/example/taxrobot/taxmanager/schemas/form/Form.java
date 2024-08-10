@@ -104,6 +104,7 @@ public abstract class Form{
     public void loadFromMap(Map<String, String> map) {
         className = this.getClass().getName();
 
+
         for (Field field: this.getClass().getDeclaredFields()){
             String fieldName = field.getName();
             String value = map.get(fieldName);

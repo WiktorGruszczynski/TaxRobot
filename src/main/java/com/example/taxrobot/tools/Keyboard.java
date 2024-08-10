@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 public class Keyboard {
     public static void sleep(int ms){
         try {
-            TimeUnit.MILLISECONDS.sleep(ms);
+            Thread.sleep(ms);
         }
         catch (InterruptedException e){
             throw new RuntimeException();

@@ -12,10 +12,12 @@ public class Launcher {
     public Launcher(){
     }
 
-    private void launch() {
+    private void launch(int delay) {
         try {
             ProcessBuilder pb = new ProcessBuilder(EXECUTABLE_PATH);
             pb.start();
+
+            Thread.sleep(delay);
 
         }
         catch (Exception e) {
@@ -57,7 +59,7 @@ public class Launcher {
         hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
 
         if (hwnd == null){
-            launch();
+            launch(2500);
         }
 
         while (hwnd == null){
@@ -70,19 +72,13 @@ public class Launcher {
 
         hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
 
-        WindowsApi.setWindowOnTop(hwnd);
+
 
         if (!WindowsApi.isForegroundWindow(hwnd)) {
-            WindowsApi.setForegroundWindow(hwnd);
-            System.out.printf("foregrund");
+            launch(0);
         }
 
-        if (WindowsApi.isWindowMinimized(hwnd)){
-            WindowsApi.showWindows(hwnd);
-        }
-
-
-
+        Keyboard.sleep(1000);
 
     }
 

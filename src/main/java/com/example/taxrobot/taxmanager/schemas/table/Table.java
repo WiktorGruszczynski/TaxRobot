@@ -4,11 +4,12 @@ import com.example.taxrobot.taxmanager.schemas.form.Form;
 import com.example.taxrobot.tools.DataReader;
 
 
-import java.util.List;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public abstract class Table extends Form {
     final protected Form[] rows;
+
 
     public Table(int size){
         rows = new Form[size];
@@ -60,15 +61,19 @@ public abstract class Table extends Form {
         }
     }
 
+
+
     @Override
     public void loadFromEntity(Object entity){
-        if (entity instanceof List<?> entityList){
-            for (Object object : entityList) {
-                super.loadFromEntity(object);
+
+
+        if (entity instanceof ArrayList<?> entityList){
+            for (int i=0; i< entityList.size(); i++){
+                rows[i].loadFromEntity(entityList.get(i));
             }
         }
         else {
-            super.loadFromEntity(entity);
+            rows[0].loadFromEntity(entity  );
         }
     }
 

@@ -46,7 +46,7 @@ public class InitializerService {
             taxManager.wageStatementTable.loadFromEntity(wageStatementEntityList);
         }
 
-        System.out.println(personalDataEntity);
+
         taxManager.fill();
 
 
