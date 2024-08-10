@@ -1,6 +1,7 @@
 package com.example.taxrobot.tools;
 
 
+import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.BaseTSD;
 import com.sun.jna.platform.win32.User32;
 import com.sun.jna.platform.win32.WinDef.*;
@@ -20,6 +21,7 @@ class WindowsApi {
     private final static int KEY_DOWN = 0;
     private final static int KEY_UP = 2;
     private final static WinUser.INPUT input = getInput();
+    private final static int HWND_TOP = 0;
 
     private static WinUser.INPUT getInput(){
         WinUser.INPUT input = new WinUser.INPUT();
@@ -145,6 +147,14 @@ class WindowsApi {
         input.input.ki.dwFlags = new DWORD(KEY_UP);
 
         user32.SendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
+    }
+
+    public static void setWindowPosition(HWND hwnd, int hwndInsertAfter, int x, int y, int cx, int cy, int flags){
+        user32.SetWindowPos(hwnd, new HWND(new Pointer(hwndInsertAfter)), x, y, cx, cy, flags);
+    }
+
+    public static void setWindowOnTop(HWND hwnd){
+        setWindowPosition(hwnd, HWND_TOP, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
     }
 }
 

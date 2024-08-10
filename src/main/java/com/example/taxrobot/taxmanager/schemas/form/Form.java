@@ -10,8 +10,7 @@ import com.example.taxrobot.tools.Keyboard;
 
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public abstract class Form{
@@ -45,8 +44,9 @@ public abstract class Form{
         Select select = (Select) field.get(this);
         select.set(value);
 
+
         if (select.getIndex() == -1){
-            throw new RuntimeException(className + "  " + value + " is not present in options - ");
+            throw new RuntimeException(className + "  " + value + " is not present in options - " + Arrays.toString(select.options));
         }
     }
 
@@ -57,11 +57,13 @@ public abstract class Form{
 
 
     private void setField(Field field, String value) throws IllegalAccessException {
-        if (isFieldRequired(field) && value==null){
+
+        if (isFieldRequired(field) && Objects.isNull(value)){
             throw new RuntimeException("Missing required field: " + className + "." + field.getName());
         }
 
         if (value == null) return;
+
 
         if (field.getType() == TextInput.class){
             setTextInput(field, value);
@@ -124,7 +126,8 @@ public abstract class Form{
                 field.setAccessible(true);
 
                 String name = field.getName();
-                String value = String.valueOf(field.get(object));
+                String value = Objects.toString(field.get(object), null);
+
                 map.put(name, value);
             }
             catch (Exception e){

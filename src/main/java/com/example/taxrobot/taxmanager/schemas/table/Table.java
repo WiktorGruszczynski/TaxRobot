@@ -4,6 +4,7 @@ import com.example.taxrobot.taxmanager.schemas.form.Form;
 import com.example.taxrobot.tools.DataReader;
 
 
+import java.util.List;
 import java.util.Map;
 
 public abstract class Table extends Form {
@@ -56,6 +57,18 @@ public abstract class Table extends Form {
             loadFromDataMap(
                     i, DataReader.getDataMap(stringForms[i])
             );
+        }
+    }
+
+    @Override
+    public void loadFromEntity(Object entity){
+        if (entity instanceof List<?> entityList){
+            for (Object object : entityList) {
+                super.loadFromEntity(object);
+            }
+        }
+        else {
+            super.loadFromEntity(entity);
         }
     }
 

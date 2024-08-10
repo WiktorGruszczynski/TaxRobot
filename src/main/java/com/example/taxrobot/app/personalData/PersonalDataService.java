@@ -10,8 +10,7 @@ public class PersonalDataService {
         this.personalDataDao = personalDataDao;
     }
 
-    public boolean addPersonalData(PersonalDataEntity personalDataEntity){
-        PersonalDataEntity savedPersonalData = personalDataDao.save(personalDataEntity);
-        return personalDataDao.existsById(savedPersonalData.getId());
+    public PersonalDataEntity addPersonalData(PersonalDataEntity personalDataEntity){
+        return personalDataDao.save(personalDataEntity);
     }
 }

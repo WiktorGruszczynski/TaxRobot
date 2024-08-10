@@ -18,6 +18,10 @@ public class Select extends Input<String>{
         this.options = options;
     }
 
+    @Override
+    public void set(String option){
+        this.value = option.trim();
+    }
 
 
     public int getIndex(){

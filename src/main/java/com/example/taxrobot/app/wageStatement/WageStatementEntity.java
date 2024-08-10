@@ -16,10 +16,11 @@ public class WageStatementEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long personalDataid;
+    private Long personalDataId;
 
     @Column(nullable = false)
     private String von;
+
     private String bis;
     private String arbeitGebeter;
     private String nettolohn;

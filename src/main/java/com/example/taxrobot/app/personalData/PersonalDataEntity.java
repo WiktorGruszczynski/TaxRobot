@@ -64,6 +64,7 @@ public class PersonalDataEntity {
     @Column(nullable = false)
     private String gemeinde;
 
+
     private String gemeinde2;
 
 }

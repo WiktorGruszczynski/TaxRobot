@@ -8,6 +8,7 @@ public class Launcher {
     private final String EXECUTABLE_PATH = "C:\\Program Files (x86)\\Private Tax 2023\\Private Tax 2023.exe";
     private HWND hwnd;
 
+
     public Launcher(){
     }
 
@@ -66,15 +67,22 @@ public class Launcher {
         Keyboard.sleep(500);
 
 
+
         hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
+
+        WindowsApi.setWindowOnTop(hwnd);
 
         if (!WindowsApi.isForegroundWindow(hwnd)) {
             WindowsApi.setForegroundWindow(hwnd);
+            System.out.printf("foregrund");
         }
 
         if (WindowsApi.isWindowMinimized(hwnd)){
             WindowsApi.showWindows(hwnd);
         }
+
+
+
 
     }
 

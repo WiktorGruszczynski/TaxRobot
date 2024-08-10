@@ -27,7 +27,7 @@ public class PersonalData extends Form {
     private TextInput PID = new TextInput(true);
     private RadioInput pensionskasse = new RadioInput(true);
     private Select gemeinde = new Select(Options.GEMEINDE, true);
-    private Select gemeinde2 = new Select(Options.GEMEINDE);
+    private Select gemeinde2 = new Select(Options.GEMEINDE, false);
 
 
     public void fill(){

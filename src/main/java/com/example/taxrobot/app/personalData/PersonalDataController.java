@@ -1,5 +1,6 @@
 package com.example.taxrobot.app.personalData;
 
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,7 @@ public class PersonalDataController {
     }
 
     @PostMapping
-    public boolean addPersonalData(@RequestBody PersonalDataEntity personalDataEntity){
+    public PersonalDataEntity addPersonalData(@RequestBody PersonalDataEntity personalDataEntity){
         return personalDataService.addPersonalData(personalDataEntity);
     }
 }

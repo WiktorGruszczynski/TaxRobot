@@ -15,7 +15,8 @@ public class InitializerController {
     }
 
     @GetMapping(path = "/init")
-    public void init(){
+    public boolean init(){
         initializerService.init();
+        return true;
     }
 }
