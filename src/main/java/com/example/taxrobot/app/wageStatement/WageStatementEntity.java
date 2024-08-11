@@ -22,6 +22,6 @@ public class WageStatementEntity {
     private String von;
 
     private String bis;
-    private String arbeitGebeter;
+    private String arbeitGeber;
     private String nettolohn;
 }

@@ -22,7 +22,7 @@ public class InitializerService {
         this.wageStatementDao = wageStatementDao;
     }
 
-    private void starter(){
+    public void initThreadFunction(){
         launcher.start();
         launcher.listen();
 
@@ -53,8 +53,7 @@ public class InitializerService {
     }
 
     public void init(){
-        new Thread(this::starter).start();
+        new Thread(this::initThreadFunction).start();
     }
-}
 
-    
+}

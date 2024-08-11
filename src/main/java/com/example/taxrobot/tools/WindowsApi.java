@@ -89,8 +89,12 @@ class WindowsApi {
     }
 
 
-    public static void showWindows(HWND hwnd){
+    public static void showWindow(HWND hwnd){
         user32.ShowWindow(hwnd, WinUser.SW_SHOWNORMAL);
+    }
+
+    public static void setFocus(HWND hwnd){
+        user32.SetFocus(hwnd);
     }
 
 

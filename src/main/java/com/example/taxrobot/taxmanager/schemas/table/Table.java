@@ -65,15 +65,13 @@ public abstract class Table extends Form {
 
     @Override
     public void loadFromEntity(Object entity){
-
-
         if (entity instanceof ArrayList<?> entityList){
             for (int i=0; i< entityList.size(); i++){
                 rows[i].loadFromEntity(entityList.get(i));
             }
         }
         else {
-            rows[0].loadFromEntity(entity  );
+            rows[0].loadFromEntity(entity);
         }
     }
 

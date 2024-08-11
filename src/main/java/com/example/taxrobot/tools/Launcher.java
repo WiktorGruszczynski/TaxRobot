@@ -66,20 +66,18 @@ public class Launcher {
             hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
         }
 
-        Keyboard.sleep(500);
+        Keyboard.sleep(250);
 
+        WindowsApi.showWindow(hwnd);
+        Keyboard.sleep(10);
 
+        WindowsApi.setWindowOnTop(hwnd);
+        Keyboard.sleep(10);
 
-        hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
+        WindowsApi.setForegroundWindow(hwnd);
+        Keyboard.sleep(10);
 
-
-
-        if (!WindowsApi.isForegroundWindow(hwnd)) {
-            launch(0);
-        }
-
-        Keyboard.sleep(1000);
-
+        WindowsApi.setFocus(hwnd);
     }
 
 
