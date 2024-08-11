@@ -44,12 +44,12 @@ public class TaxManager {
     }
 
     public void fill(){
-        Keyboard.sleep(300);
+        Keyboard.sleep(1000);
         selectMainMenuOption(0);
         waitForFormularWindow();
-        Keyboard.sleep(200);
+        Keyboard.sleep(400);
         selectInnerMenuOption(2);
-        Keyboard.sleep(350);
+        Keyboard.sleep(500);
 
         personalData.fill();
 
@@ -58,7 +58,7 @@ public class TaxManager {
 
         next();
 
-        System.out.println(wageStatementTable);
+
 
         wageStatementTable.fill();
     }

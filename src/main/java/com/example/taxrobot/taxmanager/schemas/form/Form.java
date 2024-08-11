@@ -193,7 +193,16 @@ public abstract class Form{
 
             if (input.getClass() == Select.class){
                 Select select = (Select) input;
-                Keyboard.arrowDown(select.getIndex()+2);
+                int movesAmount = select.getIndex()+2;
+                int arrowMoves = movesAmount%8;
+                int pageDownMoves = (movesAmount - arrowMoves)/8;
+
+
+                System.out.println(pageDownMoves);
+                System.out.println(arrowMoves);
+
+                Keyboard.pageDown(pageDownMoves);
+                Keyboard.arrowDown(arrowMoves);
             }
         }
 

@@ -78,6 +78,8 @@ public class Launcher {
         Keyboard.sleep(10);
 
         WindowsApi.setFocus(hwnd);
+
+        Keyboard.sleep(100);
     }
 
 

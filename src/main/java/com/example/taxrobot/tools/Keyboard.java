@@ -62,6 +62,16 @@ public class Keyboard {
         pressKeycodes(KeyEvent.VK_DOWN);
     }
 
+    public static void pageDown(){
+        pressKeycodes(KeyEvent.VK_PAGE_DOWN);
+    }
+
+    public static void pageDown(int steps){
+        for (int i=0; i<steps; i++){
+            pageDown();
+        }
+    }
+
     public static void arrowDown(int steps){
         for (int i=0; i<steps; i++){
             arrowDown();
