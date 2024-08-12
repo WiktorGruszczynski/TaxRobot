@@ -22,10 +22,7 @@ public class InitializerService {
         this.wageStatementDao = wageStatementDao;
     }
 
-    public void initThreadFunction(){
-        launcher.start();
-        launcher.listen();
-
+    private void setTaxmanagerData(){
         Long personalDataId = 2L;
 
         PersonalDataEntity personalDataEntity = personalDataDao.findById(personalDataId).orElse(null);
@@ -45,6 +42,14 @@ public class InitializerService {
         else {
             taxManager.wageStatementTable.loadFromEntity(wageStatementEntityList);
         }
+
+    }
+
+    public void initThreadFunction(){
+        launcher.start();
+        launcher.listen();
+
+        setTaxmanagerData();
 
         taxManager.fill();
     }

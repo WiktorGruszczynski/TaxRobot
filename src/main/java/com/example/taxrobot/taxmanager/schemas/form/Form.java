@@ -197,10 +197,6 @@ public abstract class Form{
                 int arrowMoves = movesAmount%8;
                 int pageDownMoves = (movesAmount - arrowMoves)/8;
 
-
-                System.out.println(pageDownMoves);
-                System.out.println(arrowMoves);
-
                 Keyboard.pageDown(pageDownMoves);
                 Keyboard.arrowDown(arrowMoves);
             }

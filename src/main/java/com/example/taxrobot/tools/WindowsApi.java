@@ -13,7 +13,7 @@ import com.sun.jna.ptr.IntByReference;
 
 
 import java.util.Objects;
-
+import java.util.concurrent.TimeUnit;
 
 
 class WindowsApi {
@@ -112,6 +112,11 @@ class WindowsApi {
     public static void postCharacters(String text){
         for (char c: text.toCharArray()){
             user32.PostMessage(getForegroundWindow(), WinUser.WM_CHAR, new WPARAM(c), new LPARAM(0));
+            try {
+                TimeUnit.MILLISECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 

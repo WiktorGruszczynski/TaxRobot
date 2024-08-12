@@ -47,7 +47,7 @@ public class TaxManager {
         Keyboard.sleep(1000);
         selectMainMenuOption(0);
         waitForFormularWindow();
-        Keyboard.sleep(400);
+        Keyboard.sleep(1000);
         selectInnerMenuOption(2);
         Keyboard.sleep(500);
 
