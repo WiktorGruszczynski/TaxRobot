@@ -4,7 +4,6 @@ import com.example.taxrobot.taxmanager.schemas.form.Form;
 import com.example.taxrobot.tools.DataReader;
 
 
-import java.lang.reflect.Field;
 import java.util.*;
 
 public abstract class Table extends Form {
@@ -24,16 +23,15 @@ public abstract class Table extends Form {
         int size = 0;
 
         for (Form form: rows){
-            if (!form.isEmpty()) size+=1;
+            if (form.isEmpty()) size+=1;
         }
 
         Form[] validRows = new Form[size];
 
-
         int n=0;
         while (n<size){
             for (Form form: rows){
-                if (!form.isEmpty()){
+                if (form.isEmpty()){
                     validRows[n] = form;
                     n++;
                 }

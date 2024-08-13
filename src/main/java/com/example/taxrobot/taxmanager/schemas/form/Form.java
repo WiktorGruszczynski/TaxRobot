@@ -1,14 +1,12 @@
 package com.example.taxrobot.taxmanager.schemas.form;
 
 
-import com.example.taxrobot.taxmanager.schemas.input.Input;
 import com.example.taxrobot.taxmanager.schemas.input.RadioInput;
 import com.example.taxrobot.taxmanager.schemas.input.Select;
 import com.example.taxrobot.taxmanager.schemas.input.TextInput;
+import com.example.taxrobot.taxmanager.util.Options;
 import com.example.taxrobot.tools.DataReader;
 import com.example.taxrobot.tools.Keyboard;
-
-
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -16,22 +14,35 @@ import java.util.*;
 public abstract class Form{
     private String className;
 
-    private void setTextInput(Field field, String value) throws IllegalAccessException {
-        TextInput textInput = (TextInput) field.get(this);
-        textInput.set(value);
+    public boolean isEmpty(){
+        for (Field field: this.getClass().getDeclaredFields()){
+            field.setAccessible(true);
+            try {
+                if (field.get(this)!=null){
+                    return true;
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
+        return false;
     }
 
+    private void setTextInput(Field field, String value) throws IllegalAccessException {
+        field.set(this, value);
+    }
 
     private void setRadioInput(Field field, String value) throws IllegalAccessException {
-        RadioInput radioInput = (RadioInput) field.get(this);
         value = value.toLowerCase();
 
         if (value.equals("true") || value.equals("1")){
-            radioInput.set(true);
+            field.set(this, true);
         }
         else {
             if (value.equals("false") || value.equals("0")){
-                radioInput.set(false);
+                field.set(this, false);
             }
             else {
                 throw new RuntimeException(className + "  RadioInput has incorrect value: " + field.getName());
@@ -40,81 +51,100 @@ public abstract class Form{
     }
 
 
-    private void setSelectOption(Field field, String value) throws IllegalAccessException {
-        Select select = (Select) field.get(this);
-        select.set(value);
-
-
-        if (select.getIndex() == -1){
-            throw new RuntimeException(className + "  " + value + " is not present in options - " + Arrays.toString(select.options));
+    private String[] getSelectOptions(String optionsName){
+        for (Field optionsField: Options.class.getDeclaredFields()) {
+            if (optionsField.getName().equals(optionsName)) {
+                try {
+                    return  (String[]) optionsField.get(null);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
+
+        return null;
     }
 
+    private void setSelectOption(Field field, String value) throws IllegalAccessException {
+        String optionsName = field.getAnnotation(Select.class).options();
 
-    private boolean isFieldRequired(Field field) throws IllegalAccessException {
-        return ((Input<?>) field.get(this)).isRequired();
+        for (String option: Objects.requireNonNull(getSelectOptions(optionsName))){
+            if (Objects.equals(option, value)){
+                field.set(this, value);
+                return;
+            }
+        }
+
+        throw new RuntimeException(className + "  " + value + " is not present in options - " + optionsName);
+    }
+
+    private boolean isInput(Field field){
+        return (field.isAnnotationPresent(TextInput.class) ||
+                field.isAnnotationPresent(RadioInput.class) ||
+                field.isAnnotationPresent(Select.class)
+        );
+    }
+
+    private boolean isInput(Class<?> field){
+        return (field.isAnnotationPresent(TextInput.class) ||
+                field.isAnnotationPresent(RadioInput.class) ||
+                field.isAnnotationPresent(Select.class)
+        );
+    }
+
+    private boolean isRequired(Field field) {
+        if (field.isAnnotationPresent(TextInput.class)){
+            return field.getAnnotation(TextInput.class).required();
+        }
+
+        if (field.isAnnotationPresent(RadioInput.class)){
+            return field.getAnnotation(RadioInput.class).required();
+        }
+
+        if (field.isAnnotationPresent(Select.class)){
+            return field.getAnnotation(Select.class).required();
+        }
+
+        return false;
     }
 
 
     private void setField(Field field, String value) throws IllegalAccessException {
-
-        if (isFieldRequired(field) && Objects.isNull(value)){
+        if (isRequired(field) && Objects.isNull(value)){
             throw new RuntimeException("Missing required field: " + className + "." + field.getName());
         }
 
         if (value == null) return;
 
-
-        if (field.getType() == TextInput.class){
+        if (field.isAnnotationPresent(TextInput.class)){
             setTextInput(field, value);
         }
 
-        if (field.getType() == RadioInput.class){
+        if (field.isAnnotationPresent(RadioInput.class)){
             setRadioInput(field, value);
         }
 
-        if (field.getType() == Select.class){
+        if (field.isAnnotationPresent(Select.class)){
             setSelectOption(field, value);
         }
-    }
-
-
-    public boolean isEmpty(){
-        for (Field field: this.getClass().getDeclaredFields()){
-            try {
-                field.setAccessible(true);
-
-                if (Input.class.isAssignableFrom(field.getType())){
-                    Input<?> input = (Input<?>) field.get(this);
-                    if (input.get() != null){
-                        return false;
-                    }
-                }
-
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-
-        return true;
     }
 
 
     public void loadFromMap(Map<String, String> map) {
         className = this.getClass().getName();
 
-
         for (Field field: this.getClass().getDeclaredFields()){
-            String fieldName = field.getName();
-            String value = map.get(fieldName);
-            field.setAccessible(true);
+            String value = map.get(field.getName());
 
-            try{
-                setField(field, value);
-            }
-            catch (IllegalAccessException e){
-                e.printStackTrace();
+            if (isInput(field)){
+                field.setAccessible(true);
+
+                try{
+                    setField(field, value);
+                }
+                catch (IllegalAccessException e){
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -127,7 +157,7 @@ public abstract class Form{
                 field.setAccessible(true);
 
                 String name = field.getName();
-                String value = Objects.toString(field.get(object), null);
+                String value = Objects.toString(field.get(object), null).trim();
 
                 map.put(name, value);
             }
@@ -150,6 +180,9 @@ public abstract class Form{
 
         for (int i=0; i<fields.length; i++){
             Field field = fields[i];
+
+            if (!isInput(field)) continue;
+
             field.setAccessible(true);
             try {
                 stringBuilder
@@ -160,12 +193,11 @@ public abstract class Form{
 
                 if (i<fields.length-1){
                     stringBuilder.append(",\n");
-                }
+               }
             }
             catch (Exception e){
                 e.printStackTrace();
             }
-
         }
 
         stringBuilder.append("\n}");
@@ -173,38 +205,73 @@ public abstract class Form{
     }
 
 
+    private void fillTextInput(String value){
+        Keyboard.writeText(value);
+    }
 
-    protected void fillInput(Input<?> input){
-        if (input.get() != null){
-            if (input.getClass() == TextInput.class){
-                TextInput textInput = (TextInput) input;
-                Keyboard.writeText(textInput.get());
-            }
+    private void fillRadioInput(boolean value){
+        if (value){
+            Keyboard.arrowRight(2);
+        }
+        else {
+            Keyboard.arrowRight();
+        }
+    }
 
-            if (input.getClass() == RadioInput.class){
-                RadioInput radioInput = (RadioInput) input;
-                if (radioInput.get()){
-                    Keyboard.arrowRight(2);
+    private void fillSelect(Field field){
+
+    }
+
+
+    protected void fillInput(Object input){
+        Field[] fields = this.getClass().getDeclaredFields();
+
+        for (Field field: fields){
+            try {
+                field.setAccessible(true);
+
+                if (field.get(this)!=null && field.get(this)==input){
+                    if (field.isAnnotationPresent(TextInput.class)){
+                        fillTextInput((String) input);
+                    }
+
+                    if (field.isAnnotationPresent(RadioInput.class)){
+                        fillRadioInput((boolean) input);
+                    }
+
+                    if (field.isAnnotationPresent(Select.class)){
+                        String[] options = getSelectOptions(
+                                field.getAnnotation(Select.class).options()
+                        );
+                        String inputValue = (String) input;
+                        int index = 0;
+
+                        if (options!=null){
+                            for (int i=0; i< options.length; i++){
+                                if (Objects.equals(options[i], inputValue)){
+                                    index = i;
+                                    break;
+                                }
+                            }
+                            int moves = index+2;
+                            int arrowMoves = moves%8;
+                            int pageUpMoves = (moves - arrowMoves)/8;
+
+                            Keyboard.pageDown(pageUpMoves);
+                            Keyboard.arrowDown(arrowMoves);
+                        }
+                    }
+
                 }
-                else{
-                    Keyboard.arrowRight();
-                }
-            }
 
-            if (input.getClass() == Select.class){
-                Select select = (Select) input;
-                int movesAmount = select.getIndex()+2;
-                int arrowMoves = movesAmount%8;
-                int pageDownMoves = (movesAmount - arrowMoves)/8;
-
-                Keyboard.pageDown(pageDownMoves);
-                Keyboard.arrowDown(arrowMoves);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
         }
 
+
         move();
     }
-
 
     protected void open(){
         Keyboard.space();

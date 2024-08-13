@@ -1,7 +1,7 @@
 package com.example.taxrobot.taxmanager.util;
 
 public class Options {
-    public final static String[] ZIVILSTAND = {
+    public final static String[] ZIVILSTAND = new String[]{
             "ledig",
             "verheiratet",
             "verwitet",
@@ -10,6 +10,8 @@ public class Options {
             "eingetragene Partnerschaft",
             "aufgeloste Partnerschaft"
     };
+
+
 
     public final static String[] KONFESSION = {
             "reformiert",

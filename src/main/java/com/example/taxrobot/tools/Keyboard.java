@@ -20,11 +20,11 @@ public class Keyboard {
             WindowsApi.keyDown(keyCode);
         }
 
+        sleep(1);
+
         for (int keyCode: keycodes){
             WindowsApi.keyUp(keyCode);
         }
-
-        sleep(1);
 
     }
 
@@ -51,7 +51,7 @@ public class Keyboard {
 
     public static void space(){
         pressKeycodes(KeyEvent.VK_SPACE);
-        sleep(200);
+        sleep(500);
     }
 
     public static void enter(){

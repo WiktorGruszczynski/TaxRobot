@@ -52,6 +52,7 @@ public class Launcher {
                 Keyboard.space();
             }
 
+            Keyboard.sleep(50);
             }
     }
 
@@ -66,16 +67,21 @@ public class Launcher {
             hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
         }
 
-        Keyboard.sleep(250);
+        Keyboard.sleep(300);
 
-        WindowsApi.showWindow(hwnd);
-        Keyboard.sleep(10);
+        if (WindowsApi.isWindowMinimized(hwnd)){
+            WindowsApi.showWindow(hwnd);
+        }
+        Keyboard.sleep(20);
 
         WindowsApi.setWindowOnTop(hwnd);
-        Keyboard.sleep(10);
+        Keyboard.sleep(20);
 
-        WindowsApi.setForegroundWindow(hwnd);
-        Keyboard.sleep(10);
+        if (!WindowsApi.isForegroundWindow(hwnd)){
+            WindowsApi.setForegroundWindow(hwnd);
+        }
+
+        Keyboard.sleep(20);
 
         WindowsApi.setFocus(hwnd);
 

@@ -1,33 +1,69 @@
 package com.example.taxrobot.taxmanager.resources.forms;
 
-import com.example.taxrobot.app.personalData.PersonalDataEntity;
 import com.example.taxrobot.taxmanager.schemas.form.Form;
 import com.example.taxrobot.taxmanager.schemas.input.RadioInput;
 import com.example.taxrobot.taxmanager.schemas.input.Select;
 import com.example.taxrobot.taxmanager.schemas.input.TextInput;
-import com.example.taxrobot.taxmanager.util.Options;
+import lombok.Getter;
 
 
-
+@Getter
 public class PersonalData extends Form {
-    private TextInput name = new TextInput(true);
-    private TextInput vorname = new TextInput(true);
-    private TextInput strasse = new TextInput();
-    private TextInput nummer = new TextInput();
-    private TextInput zusatz = new TextInput();
-    private TextInput PLZ = new TextInput();
-    private TextInput ort = new TextInput();
-    private TextInput geburtsdatum = new TextInput('.');
-    private TextInput AHVN13 = new TextInput('.', true);
-    private Select zivilstand = new Select(Options.ZIVILSTAND, true);
-    private Select konfession = new Select(Options.KONFESSION, true);
-    private TextInput beruf = new TextInput();
-    private TextInput telefon = new TextInput();
-    private TextInput email = new TextInput();
-    private TextInput PID = new TextInput(true);
-    private RadioInput pensionskasse = new RadioInput(true);
-    private Select gemeinde = new Select(Options.GEMEINDE, true);
-    private Select gemeinde2 = new Select(Options.GEMEINDE, false);
+    private Long id;
+
+    @TextInput(required = true)
+    private String name;
+
+    @TextInput(required = true)
+    private String vorname;
+
+    @TextInput
+    private String strasse;
+
+    @TextInput
+    private String nummer;
+
+    @TextInput
+    private String zusatz;
+
+    @TextInput
+    private String PLZ;
+
+    @TextInput(required = true)
+    private String ort;
+
+    @TextInput
+    private String geburtsdatum;
+
+    @TextInput(required = true)
+    private String AHVN13;
+
+    @Select(options = "ZIVILSTAND", required = true)
+    private String zivilstand;
+
+    @Select(options = "KONFESSION", required = true)
+    private String konfession;
+
+    @TextInput
+    private String beruf;
+
+    @TextInput
+    private String telefon;
+
+    @TextInput
+    private String email;
+
+    @TextInput(required = true)
+    private String PID;
+
+    @RadioInput(required = true)
+    private Boolean pensionskasse;
+
+    @Select(options = "GEMEINDE", required = true)
+    private String gemeinde;
+
+    @Select(options = "GEMEINDE")
+    private String gemeinde2;
 
 
     public void fill(){

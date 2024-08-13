@@ -27,21 +27,23 @@ public class InitializerService {
 
         PersonalDataEntity personalDataEntity = personalDataDao.findById(personalDataId).orElse(null);
 
-        if (personalDataEntity != null){
-            taxManager.personalData.loadFromEntity(personalDataEntity);
-        }
-        else {
+//        if (personalDataEntity != null){
+//            taxManager.personalData.loadFromEntity(personalDataEntity);
+//        }
+//        else {
             taxManager.personalData.loadFromFile("personal-data.txt");
-        }
+//        }
 
-        List<WageStatementEntity> wageStatementEntityList = wageStatementDao.findAllByPersonalDataId(personalDataId);
-
-        if (wageStatementEntityList.isEmpty()){
+//        List<WageStatementEntity> wageStatementEntityList = wageStatementDao.findAllByPersonalDataId(personalDataId);
+//
+//        if (wageStatementEntityList.isEmpty()){
             taxManager.wageStatementTable.loadFromFile("wage-statement.txt");
-        }
-        else {
-            taxManager.wageStatementTable.loadFromEntity(wageStatementEntityList);
-        }
+//        }
+//        else {
+//            taxManager.wageStatementTable.loadFromEntity(wageStatementEntityList);
+//        }
+
+
 
     }
 
