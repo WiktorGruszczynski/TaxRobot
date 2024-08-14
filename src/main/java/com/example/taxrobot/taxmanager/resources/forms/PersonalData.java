@@ -1,19 +1,33 @@
 package com.example.taxrobot.taxmanager.resources.forms;
 
-import com.example.taxrobot.taxmanager.schemas.form.Form;
-import com.example.taxrobot.taxmanager.schemas.input.RadioInput;
-import com.example.taxrobot.taxmanager.schemas.input.Select;
-import com.example.taxrobot.taxmanager.schemas.input.TextInput;
+import com.example.taxrobot.taxmanager.schemas.Form;
+import com.example.taxrobot.taxmanager.annotations.RadioInput;
+import com.example.taxrobot.taxmanager.annotations.Select;
+import com.example.taxrobot.taxmanager.annotations.TextInput;
+import com.example.taxrobot.taxmanager.util.Options;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Getter
+@Setter
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "personal_data")
 public class PersonalData extends Form {
+    @Id
+    @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
     @TextInput(required = true)
     private String name;
 
+    @Column(nullable = false)
     @TextInput(required = true)
     private String vorname;
 
@@ -26,22 +40,27 @@ public class PersonalData extends Form {
     @TextInput
     private String zusatz;
 
+    @Column(name = "PLZ")
     @TextInput
     private String PLZ;
 
+    @Column(nullable = false)
     @TextInput(required = true)
     private String ort;
 
     @TextInput
     private String geburtsdatum;
 
+    @Column(nullable = false, name = "AHVN13")
     @TextInput(required = true)
     private String AHVN13;
 
-    @Select(options = "ZIVILSTAND", required = true)
+    @Column(nullable = false)
+    @Select(options = Options.ZIVILSTAND, required = true)
     private String zivilstand;
 
-    @Select(options = "KONFESSION", required = true)
+    @Column(nullable = false)
+    @Select(options = Options.KONFESSION, required = true)
     private String konfession;
 
     @TextInput
@@ -53,16 +72,19 @@ public class PersonalData extends Form {
     @TextInput
     private String email;
 
+    @Column(name = "PID", nullable = false)
     @TextInput(required = true)
     private String PID;
 
+    @Column(nullable = false)
     @RadioInput(required = true)
     private Boolean pensionskasse;
 
-    @Select(options = "GEMEINDE", required = true)
+    @Column(nullable = false)
+    @Select(options = Options.GEMEINDE, required = true)
     private String gemeinde;
 
-    @Select(options = "GEMEINDE")
+    @Select(options = Options.GEMEINDE)
     private String gemeinde2;
 
 

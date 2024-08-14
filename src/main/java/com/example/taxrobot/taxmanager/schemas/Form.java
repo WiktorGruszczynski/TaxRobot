@@ -1,10 +1,10 @@
-package com.example.taxrobot.taxmanager.schemas.form;
+package com.example.taxrobot.taxmanager.schemas;
 
 
-import com.example.taxrobot.taxmanager.schemas.input.RadioInput;
-import com.example.taxrobot.taxmanager.schemas.input.Select;
-import com.example.taxrobot.taxmanager.schemas.input.TextInput;
 import com.example.taxrobot.taxmanager.util.Options;
+import com.example.taxrobot.taxmanager.annotations.RadioInput;
+import com.example.taxrobot.taxmanager.annotations.Select;
+import com.example.taxrobot.taxmanager.annotations.TextInput;
 import com.example.taxrobot.tools.DataReader;
 import com.example.taxrobot.tools.Keyboard;
 import java.lang.reflect.Field;
@@ -51,41 +51,21 @@ public abstract class Form{
     }
 
 
-    private String[] getSelectOptions(String optionsName){
-        for (Field optionsField: Options.class.getDeclaredFields()) {
-            if (optionsField.getName().equals(optionsName)) {
-                try {
-                    return  (String[]) optionsField.get(null);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-
-        return null;
-    }
-
     private void setSelectOption(Field field, String value) throws IllegalAccessException {
-        String optionsName = field.getAnnotation(Select.class).options();
+        Options optionsEnum = field.getAnnotation(Select.class).options();
+        String[] options = optionsEnum.getOptions();
 
-        for (String option: Objects.requireNonNull(getSelectOptions(optionsName))){
+        for (String option: options){
             if (Objects.equals(option, value)){
                 field.set(this, value);
                 return;
             }
         }
 
-        throw new RuntimeException(className + "  " + value + " is not present in options - " + optionsName);
+        throw new RuntimeException(className + "  " + value + " is not present in options - " + optionsEnum);
     }
 
     private boolean isInput(Field field){
-        return (field.isAnnotationPresent(TextInput.class) ||
-                field.isAnnotationPresent(RadioInput.class) ||
-                field.isAnnotationPresent(Select.class)
-        );
-    }
-
-    private boolean isInput(Class<?> field){
         return (field.isAnnotationPresent(TextInput.class) ||
                 field.isAnnotationPresent(RadioInput.class) ||
                 field.isAnnotationPresent(Select.class)
@@ -157,7 +137,10 @@ public abstract class Form{
                 field.setAccessible(true);
 
                 String name = field.getName();
-                String value = Objects.toString(field.get(object), null).trim();
+                String value = Objects.toString(field.get(object), null);
+                if (value!=null){
+                    value = value.trim();
+                }
 
                 map.put(name, value);
             }
@@ -218,8 +201,22 @@ public abstract class Form{
         }
     }
 
-    private void fillSelect(Field field){
+    private void fillSelect(Field field, String inputValue){
+        String[] options = field.getAnnotation(Select.class).options().getOptions();
+        int index = 0;
 
+        for (int i = 0; i < options.length; i++) {
+            if (Objects.equals(options[i], inputValue)) {
+                index = i;
+                break;
+            }
+        }
+        int moves = index+2;
+        int arrowMoves = moves%8;
+        int pageUpMoves = (moves - arrowMoves)/8;
+
+        Keyboard.pageDown(pageUpMoves);
+        Keyboard.arrowDown(arrowMoves);
     }
 
 
@@ -240,26 +237,7 @@ public abstract class Form{
                     }
 
                     if (field.isAnnotationPresent(Select.class)){
-                        String[] options = getSelectOptions(
-                                field.getAnnotation(Select.class).options()
-                        );
-                        String inputValue = (String) input;
-                        int index = 0;
-
-                        if (options!=null){
-                            for (int i=0; i< options.length; i++){
-                                if (Objects.equals(options[i], inputValue)){
-                                    index = i;
-                                    break;
-                                }
-                            }
-                            int moves = index+2;
-                            int arrowMoves = moves%8;
-                            int pageUpMoves = (moves - arrowMoves)/8;
-
-                            Keyboard.pageDown(pageUpMoves);
-                            Keyboard.arrowDown(arrowMoves);
-                        }
+                        fillSelect(field, (String) input);
                     }
 
                 }

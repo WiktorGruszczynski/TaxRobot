@@ -1,10 +1,10 @@
 package com.example.taxrobot.app.personalData;
 
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.taxrobot.taxmanager.resources.forms.PersonalData;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/personal_data")
@@ -16,7 +16,12 @@ public class PersonalDataController {
     }
 
     @PostMapping
-    public PersonalDataEntity addPersonalData(@RequestBody PersonalDataEntity personalDataEntity){
-        return personalDataService.addPersonalData(personalDataEntity);
+    public PersonalData addPersonalData(@RequestBody PersonalData personalData){
+        return personalDataService.addPersonalData(personalData);
+    }
+
+    @GetMapping(path = "/getAll")
+    public List<PersonalData> getAllPersonalData(){
+        return personalDataService.getAllPersonalData();
     }
 }

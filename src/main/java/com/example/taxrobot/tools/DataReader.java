@@ -8,9 +8,7 @@ import java.util.Scanner;
 
 public class DataReader {
     public static String readFile(String path){
-        if (path.charAt(1) != ':'){
-            path = "src/main/resources/data/" + path;
-        }
+
 
         StringBuilder buffer = new StringBuilder();
 

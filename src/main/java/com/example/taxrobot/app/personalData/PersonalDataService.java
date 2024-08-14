@@ -1,6 +1,9 @@
 package com.example.taxrobot.app.personalData;
 
+import com.example.taxrobot.taxmanager.resources.forms.PersonalData;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PersonalDataService {
@@ -10,7 +13,11 @@ public class PersonalDataService {
         this.personalDataDao = personalDataDao;
     }
 
-    public PersonalDataEntity addPersonalData(PersonalDataEntity personalDataEntity){
+    public PersonalData addPersonalData(PersonalData personalDataEntity){
         return personalDataDao.save(personalDataEntity);
+    }
+
+    public List<PersonalData> getAllPersonalData() {
+        return personalDataDao.findAll();
     }
 }

@@ -27,6 +27,7 @@ public class Launcher {
 
 
     private void isAlive(){
+        Keyboard.sleep(250);
         final int PID = WindowsApi.getProcessIdByWindowHandle(hwnd);
         int currentWindowPid;
         String currentWindowTitle;
@@ -52,7 +53,7 @@ public class Launcher {
                 Keyboard.space();
             }
 
-            Keyboard.sleep(50);
+            Keyboard.sleep(500);
             }
     }
 
@@ -67,23 +68,10 @@ public class Launcher {
             hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
         }
 
+        System.out.println("Window is here");
         Keyboard.sleep(300);
 
-        if (WindowsApi.isWindowMinimized(hwnd)){
-            WindowsApi.showWindow(hwnd);
-        }
-        Keyboard.sleep(20);
-
-        WindowsApi.setWindowOnTop(hwnd);
-        Keyboard.sleep(20);
-
-        if (!WindowsApi.isForegroundWindow(hwnd)){
-            WindowsApi.setForegroundWindow(hwnd);
-        }
-
-        Keyboard.sleep(20);
-
-        WindowsApi.setFocus(hwnd);
+        WindowsApi.displayWindow(hwnd);
 
         Keyboard.sleep(100);
     }

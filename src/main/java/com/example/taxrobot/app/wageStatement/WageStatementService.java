@@ -1,5 +1,6 @@
 package com.example.taxrobot.app.wageStatement;
 
+import com.example.taxrobot.taxmanager.resources.forms.WageStatement;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,12 +13,12 @@ public class WageStatementService {
         this.wageStatementDao = wageStatementDao;
     }
 
-    public List<WageStatementEntity> addWageStatements(List<WageStatementEntity> wageStatementEntities){
-        System.out.println(wageStatementEntities);
-        return wageStatementDao.saveAll(wageStatementEntities);
+    public List<WageStatement> addWageStatements(List<WageStatement> wageStatements){
+        System.out.println(wageStatements);
+        return wageStatementDao.saveAll(wageStatements);
     }
 
-    public List<WageStatementEntity> getWageStatementsByPersonalDataId(Long id){
+    public List<WageStatement> getWageStatementsByPersonalDataId(Long id){
         return wageStatementDao.findAllByPersonalDataId(id);
     }
 }

@@ -1,6 +1,5 @@
-package com.example.taxrobot.taxmanager.schemas.table;
+package com.example.taxrobot.taxmanager.schemas;
 
-import com.example.taxrobot.taxmanager.schemas.form.Form;
 import com.example.taxrobot.tools.DataReader;
 
 

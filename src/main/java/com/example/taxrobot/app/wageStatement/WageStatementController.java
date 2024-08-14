@@ -1,5 +1,6 @@
 package com.example.taxrobot.app.wageStatement;
 
+import com.example.taxrobot.taxmanager.resources.forms.WageStatement;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,12 +17,12 @@ public class WageStatementController {
 
 
     @PostMapping
-    public List<WageStatementEntity> addWageStatements(@RequestBody List<WageStatementEntity> wageStatementEntities){
-        return wageStatementService.addWageStatements(wageStatementEntities);
+    public List<WageStatement> addWageStatements(@RequestBody List<WageStatement> wageStatements){
+        return wageStatementService.addWageStatements(wageStatements);
     }
 
     @GetMapping(path = "/PersonalDataId")
-    private List<WageStatementEntity> getWageStatemetsByPersonalDataId(@RequestParam Long id){
+    private List<WageStatement> getWageStatemetsByPersonalDataId(@RequestParam Long id){
         return wageStatementService.getWageStatementsByPersonalDataId(id);
     }
 }

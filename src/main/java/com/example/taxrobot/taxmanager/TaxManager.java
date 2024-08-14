@@ -55,9 +55,7 @@ public class TaxManager {
 
 
         nextPage();
-
         next();
-
 
 
         wageStatementTable.fill();

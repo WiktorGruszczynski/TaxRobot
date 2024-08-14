@@ -93,6 +93,10 @@ class WindowsApi {
         user32.ShowWindow(hwnd, WinUser.SW_SHOWNORMAL);
     }
 
+    public static void showWindowMaximized(HWND hwnd){
+        user32.ShowWindow(hwnd, WinUser.SW_MAXIMIZE);
+    }
+
     public static void setFocus(HWND hwnd){
         user32.SetFocus(hwnd);
     }
@@ -161,5 +165,14 @@ class WindowsApi {
     public static void setWindowOnTop(HWND hwnd){
         setWindowPosition(hwnd, HWND_TOP, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
     }
-}
 
+    public static  void displayWindow(HWND hwnd){
+        System.out.println("restored");
+        user32.ShowWindow(hwnd, WinUser.SW_RESTORE);
+
+        setWindowOnTop(hwnd);
+
+        System.out.println("foreground");
+        user32.SetForegroundWindow(hwnd);
+    }
+}

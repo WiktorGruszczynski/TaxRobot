@@ -1,10 +1,10 @@
 package com.example.taxrobot.initializer;
 
 import com.example.taxrobot.app.personalData.PersonalDataDao;
-import com.example.taxrobot.app.personalData.PersonalDataEntity;
 import com.example.taxrobot.app.wageStatement.WageStatementDao;
-import com.example.taxrobot.app.wageStatement.WageStatementEntity;
 import com.example.taxrobot.taxmanager.TaxManager;
+import com.example.taxrobot.taxmanager.resources.forms.PersonalData;
+import com.example.taxrobot.taxmanager.resources.forms.WageStatement;
 import com.example.taxrobot.tools.Launcher;
 import org.springframework.stereotype.Service;
 
@@ -24,26 +24,16 @@ public class InitializerService {
 
     private void setTaxmanagerData(){
         Long personalDataId = 2L;
+        PersonalData personalData = personalDataDao.findById(personalDataId).orElse(null);
 
-        PersonalDataEntity personalDataEntity = personalDataDao.findById(personalDataId).orElse(null);
+        if (personalData != null){
+            taxManager.personalData.loadFromEntity(personalData);
+        }
 
-//        if (personalDataEntity != null){
-//            taxManager.personalData.loadFromEntity(personalDataEntity);
-//        }
-//        else {
-            taxManager.personalData.loadFromFile("personal-data.txt");
-//        }
-
-//        List<WageStatementEntity> wageStatementEntityList = wageStatementDao.findAllByPersonalDataId(personalDataId);
-//
-//        if (wageStatementEntityList.isEmpty()){
-            taxManager.wageStatementTable.loadFromFile("wage-statement.txt");
-//        }
-//        else {
-//            taxManager.wageStatementTable.loadFromEntity(wageStatementEntityList);
-//        }
+        List<WageStatement> wageStatementEntityList = wageStatementDao.findAllByPersonalDataId(personalDataId);
 
 
+        taxManager.wageStatementTable.loadFromEntity(wageStatementEntityList);
 
     }
 
