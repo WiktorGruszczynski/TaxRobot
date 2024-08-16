@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api/personal_data")
+@CrossOrigin(origins = "http://localhost:8080")
 public class PersonalDataController {
     private final PersonalDataService personalDataService;
 

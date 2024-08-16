@@ -8,8 +8,6 @@ import java.util.Scanner;
 
 public class DataReader {
     public static String readFile(String path){
-
-
         StringBuilder buffer = new StringBuilder();
 
         try {

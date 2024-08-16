@@ -7,6 +7,8 @@ import com.example.taxrobot.taxmanager.annotations.Select;
 import com.example.taxrobot.taxmanager.annotations.TextInput;
 import com.example.taxrobot.tools.DataReader;
 import com.example.taxrobot.tools.Keyboard;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -14,9 +16,13 @@ import java.util.*;
 public abstract class Form{
     private String className;
 
+    @JsonIgnore
     public boolean isEmpty(){
         for (Field field: this.getClass().getDeclaredFields()){
             field.setAccessible(true);
+
+            if (!isInput(field)) continue;
+
             try {
                 if (field.get(this)!=null){
                     return true;

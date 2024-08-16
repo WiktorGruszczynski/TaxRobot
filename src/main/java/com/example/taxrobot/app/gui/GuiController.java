@@ -1,8 +1,9 @@
 package com.example.taxrobot.app.gui;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/")
@@ -13,8 +14,13 @@ public class GuiController {
         this.guiService = guiService;
     }
 
-    @GetMapping
+    @GetMapping()
     public String getHome(){
         return guiService.getHome();
+    }
+
+    @GetMapping(path = "/resource/{filepath}")
+    public String getResource(@PathVariable("filepath") String filepath, HttpServletRequest request){
+        return guiService.getResource(filepath, request);
     }
 }
