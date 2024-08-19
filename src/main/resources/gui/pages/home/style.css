@@ -2,6 +2,8 @@
 
 *{
     font-family: "Poppins", sans-serif;
+    --blue: rgb(30, 196, 251);
+    --dark-blue: rgb(9, 131, 201);
 }
 
 body{
@@ -12,19 +14,25 @@ body{
 ul{
     margin: 0;
     padding: 0;
+    list-style: none;
 }
+
 
 #content{
     width: 100%;
     display: flex;
-    flex-direction: column;
 }
 
+
 .sidebar{
-    width: 200px;
+    width: 160px;
     height: 100vh;
     overflow-y: scroll;
-    background-color: lightgrey;
+    background-color: rgb(255, 255, 255);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-right: 2px solid black;
 }
 
 .sidebar-title{
@@ -33,5 +41,99 @@ ul{
     display: flex;
     justify-content: center;
     align-items: center;
+}
 
+ul.users{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+}
+
+.user_li{
+    cursor: pointer;
+    text-align: center;
+    transition: 200ms ease-in-out;
+    padding: 10px 0;
+    margin: 0;
+    border-bottom: 1px solid gray;
+    background-color: white;
+}
+
+
+.user_li:first-child{
+    border-top: 1px solid gray;
+}
+
+.user_li:hover{
+    filter: brightness(.75);
+}
+
+.options-bar{
+    width: 220px;
+    height: 100vh;
+    border-right: 2px solid black;
+    display: flex;
+    justify-content: center;
+}
+
+#options-list{
+    width: 100%;
+    padding-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 42px;
+}
+
+.option{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--blue);
+    border-radius: 32px;
+    transition: 200ms ease-in-out;
+    width: 80%;
+    height: 40px;
+    cursor: pointer;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.option:hover{
+    background: var(--dark-blue);
+}
+
+.data-wrapper{
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.data{
+    width: 1000px;
+    height: 98%;
+}
+
+.data-content{
+    width: 100%;
+    height: 100%;
+    color: black;
+}
+
+.field{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.field input{
+    height: 32px;
+    outline: none;
+    border: none;
+    background: none;
 }
