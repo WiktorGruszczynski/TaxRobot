@@ -5,6 +5,8 @@ import com.example.taxrobot.taxmanager.annotations.RadioInput;
 import com.example.taxrobot.taxmanager.annotations.Select;
 import com.example.taxrobot.taxmanager.annotations.TextInput;
 import com.example.taxrobot.taxmanager.util.Options;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -41,6 +43,7 @@ public class PersonalData extends Form {
     private String zusatz;
 
     @Column(name = "PLZ")
+    @JsonProperty("PLZ")
     @TextInput
     private String PLZ;
 
@@ -52,6 +55,7 @@ public class PersonalData extends Form {
     private String geburtsdatum;
 
     @Column(nullable = false, name = "AHVN13")
+    @JsonProperty("AHVN13")
     @TextInput(required = true)
     private String AHVN13;
 
@@ -73,6 +77,7 @@ public class PersonalData extends Form {
     private String email;
 
     @Column(name = "PID", nullable = false)
+    @JsonProperty("PID")
     @TextInput(required = true)
     private String PID;
 

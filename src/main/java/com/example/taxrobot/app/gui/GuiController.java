@@ -19,8 +19,10 @@ public class GuiController {
         return guiService.getHome();
     }
 
-    @GetMapping(path = "/resource/{filepath}")
-    public String getResource(@PathVariable("filepath") String filepath, HttpServletRequest request){
+    @GetMapping(path = "/resource/**")
+    public String getResource(HttpServletRequest request){
+        String fullpath = request.getRequestURI();
+        String filepath = fullpath.replace("/resource","");
         return guiService.getResource(filepath, request);
     }
 }

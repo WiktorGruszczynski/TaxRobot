@@ -29,6 +29,7 @@ public class GuiService {
             page = "home";
         }
 
+
         return DataReader.readFile(PAGES + "/" + page + "/" + filepath);
     }
 }

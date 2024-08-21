@@ -1,14 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
 
 *{
-    font-family: "Poppins", sans-serif;
     --blue: rgb(30, 196, 251);
     --dark-blue: rgb(9, 131, 201);
+    --tab-width: 42px;
 }
 
 body{
     margin: 0;
     padding: 0;
+    font-family: "Poppins", sans-serif;
 }
 
 ul{
@@ -72,6 +74,7 @@ ul.users{
 .options-bar{
     width: 220px;
     height: 100vh;
+    min-height: fit-content;
     border-right: 2px solid black;
     display: flex;
     justify-content: center;
@@ -84,6 +87,7 @@ ul.users{
     flex-direction: column;
     align-items: center;
     gap: 42px;
+    overflow-y: scroll;
 }
 
 .option{
@@ -112,28 +116,66 @@ ul.users{
     display: flex;
     justify-content: center;
     align-items: center;
+    max-height: 100vh;
 }
 
 .data{
     width: 1000px;
-    height: 98%;
 }
 
 .data-content{
     width: 100%;
-    height: 100%;
-    color: black;
+    color: black; 
+    height: 90vh;
+    overflow: scroll;
 }
 
 .field{
     display: flex;
     align-items: center;
-    gap: 18px;
+    margin-left: var(--tab-width);
+    height: 28px;
+    font-family: "Inconsolata", monospace !important;
 }
 
-.field input{
-    height: 32px;
+.j-bracket{
+    font-family: "Inconsolata", monospace !important;
+}
+
+.field h4{
+    font-weight: 500;
+}
+
+.arr-el{
+    margin-left: var(--tab-width);
+}
+
+.json-input-wrapper{
+    display: flex;
+}
+
+.json-input{
     outline: none;
     border: none;
-    background: none;
+    min-width: 2px;
+    padding: 0 1px;
+    letter-spacing: -.25px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.json-blue{
+    color: rgb(2, 139, 197);
+}
+
+.json-green{
+    color: rgb(38, 167, 13);
+}
+
+.json-orange{
+    color: orange;
+}
+
+.json-purple{
+    color: rgb(157, 42, 170);
 }

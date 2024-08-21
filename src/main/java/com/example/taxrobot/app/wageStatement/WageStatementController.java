@@ -21,8 +21,8 @@ public class WageStatementController {
         return wageStatementService.addWageStatements(wageStatements);
     }
 
-    @GetMapping(path = "/PersonalDataId")
-    private List<WageStatement> getWageStatemetsByPersonalDataId(@RequestParam Long id){
+    @GetMapping(path = "/getById/{id}")
+    private List<WageStatement> getWageStatemetsByPersonalDataId(@PathVariable("id") Long id){
         return wageStatementService.getWageStatementsByPersonalDataId(id);
     }
 }
