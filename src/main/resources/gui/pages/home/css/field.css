@@ -1,0 +1,57 @@
+.field{
+    display: flex;
+    align-items: center;
+    margin-left: var(--tab-width);
+    height: 28px;
+    font-family: "Inconsolata", monospace !important;
+}
+
+.j-bracket{
+    font-family: "Inconsolata", monospace !important;
+}
+
+.field h4{
+    font-weight: 500;
+}
+
+.arr-el{
+    margin-left: var(--tab-width);
+}
+
+.json-input-wrapper{
+    display: flex;
+}
+
+.json-input, .arr-add-btn{
+    outline: none;
+    border: none;
+    min-width: 2px;
+    padding: 0 1px;
+    letter-spacing: -.25px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.json-input:focus, .arr-add-btn:focus{
+    background-color: rgba(5, 11, 69, 0.075);
+}
+
+.json-blue{
+    color: rgb(2, 139, 197);
+}
+
+.json-green{
+    color: rgb(38, 167, 13);
+}
+
+.json-orange{
+    color: orange;
+}
+
+.json-purple{
+    color: rgb(157, 42, 170);
+}
+
+.arr-add-btn{
+    padding: 0 5px;
+}

@@ -3,12 +3,36 @@ const users_list = document.getElementsByClassName("users")[0];
 const personalDataOptionElement = document.getElementsByClassName("option")[0];
 const wageStatementsOptionElement = document.getElementsByClassName("option")[1];
 const dataContent = document.getElementsByClassName("data-content")[0];
+const dataEl = document.getElementsByClassName("data")[0]
 
 var personalDataArray;
 var userId;
 
 var personalData;
 var wageStatements;
+
+
+const personalDataScheme = {
+    id: null,
+    name: "",
+    vorname: "",
+    strasse: "",
+    nummer: "",
+    zusatz: "",
+    PLZ: "",
+    ort: "",
+    geburtsdatum: "",
+    AHVN13: "",
+    zivilstand: "",
+    konfession: "",
+    beruf: "",
+    telefon: "",
+    email: "",
+    pensionskasse: false,
+    gemeinde: "",
+    gemeinde2: ""
+}
+
 
 
 function handleFieldClick(e){
@@ -81,10 +105,10 @@ function jsonField(label, value, editable=true){
     return fieldBuilder(label, value, editable, sp_char, isNull, color_class)
 }
 
-function handlePersonalDataClick(){
-    const personalData = personalDataArray.find(p => p.id==userId)
-    
+
+function renderPersonalData(){
     dataContent.innerHTML = (
+        '<h3>Personal Data</h3>'+
         '<span class="json-blue j-bracket">{</span>'+
         jsonField("id", personalData.id, false)+
         jsonField("name", personalData.name)+
@@ -108,29 +132,67 @@ function handlePersonalDataClick(){
         '<span class="json-blue j-bracket">}</span>'
     );
 
+
 }
 
-async function handleWageStatementsClick(){
-    const wage_statements = await fetchWagestatements();
+function handlePersonalDataClick(){
+    personalData = personalDataArray.find(p => p.id==userId)
+    renderPersonalData()
+}
+
+function addWageStatement(e){
+    console.log(e)
+    if (e.inputType != "insertParagraph"){
+        e.target.innerHTML = ",";
+        return; 
+    }
+
+    wageStatements.push({
+        von: "",
+        bis: "",
+        arbeitGeber: "",
+        nettolohn: 0
+    })
+
+    renderWageStatements()
+}
+
+
+function renderWageStatements(){
     var ctx = "";
 
-    wage_statements.forEach(element => {
+    wageStatements.forEach(element => {
         let buffer = '<div class="arr-el"><span class="json-blue j-bracket">{</span>'
             + jsonField("von", element.von)
             + jsonField("bis", element.bis)
             + jsonField("arbeitGeber", element.arbeitGeber)
             + jsonField("nettolohn", element.nettolohn)
-
-            + '<span class="json-blue j-bracket">}</span></div>'
+            + '<span class="json-blue j-bracket">}</span>'
+            + '<span class="json-blue arr-add-btn" oninput={addWageStatement(event)} contenteditable>,</span>'
+            + '</div>'
+            
 
         ctx += buffer
     });
 
+
+    
+    if (wageStatements.length == 0){
+        ctx = '<span class="json-blue arr-add-btn" oninput={addWageStatement(event)} contenteditable>,</span>'
+    }
+
     dataContent.innerHTML = (
+        '<h3>Wage statements</h3>'+
         '<span class="json-blue j-bracket">[</span>'+
         ctx +
         '<span class="json-blue j-bracket">]</span>'
     )
+}
+
+async function handleWageStatementsClick(){
+    wageStatements = await fetchWagestatements();
+    renderWageStatements()
+
 }
 
 async function fetchUsers(){
@@ -155,7 +217,10 @@ function handleUserIdClick(id){
     handlePersonalDataClick(personalDataArray)
 }
 
-
+function createEmptyUserForm(){
+    personalData = personalDataScheme;
+    renderPersonalData()
+}
 
 function userListElement(user){
     const element = document.createElement("li");
@@ -167,10 +232,22 @@ function userListElement(user){
     users_list.appendChild(element)
 }
 
+function addUserBtn(){
+    const element = document.createElement("li")
+    element.innerText = "Add user";
+    element.classList.add("user_li")
+
+    element.onclick = () => createEmptyUserForm()
+
+    return element;
+}
+
 function sidebar(users){
     users.map(user => 
         userListElement(user)
     )
+    
+    users_list.appendChild(addUserBtn())
 }
 
 
