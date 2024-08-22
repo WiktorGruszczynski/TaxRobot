@@ -25,4 +25,10 @@ public class PersonalDataController {
     public List<PersonalData> getAllPersonalData(){
         return personalDataService.getAllPersonalData();
     }
+
+    @GetMapping(path = "/getAllIds")
+    public List<Long> getAllIds(){
+        return personalDataService.getAllIds();
+    }
+
 }

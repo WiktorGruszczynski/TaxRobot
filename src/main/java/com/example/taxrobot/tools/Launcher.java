@@ -12,12 +12,10 @@ public class Launcher {
     public Launcher(){
     }
 
-    private void launch(int delay) {
+    private void launch() {
         try {
             ProcessBuilder pb = new ProcessBuilder(EXECUTABLE_PATH);
             pb.start();
-
-            Thread.sleep(delay);
 
         }
         catch (Exception e) {
@@ -61,15 +59,17 @@ public class Launcher {
         hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
 
         if (hwnd == null){
-            launch(2500);
+            launch();
         }
+
+        Keyboard.sleep(2500);
 
         while (hwnd == null){
             hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
         }
 
         System.out.println("Window is here");
-        Keyboard.sleep(300);
+        Keyboard.sleep(500);
 
         WindowsApi.displayWindow(hwnd);
 

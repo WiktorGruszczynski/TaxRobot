@@ -42,22 +42,9 @@ public abstract class Table extends Form {
     }
 
 
-    public void loadFromDataMap(int index ,Map<String, String> map){
+    public void loadFromDataMap(int index ,Map<String, Object> map){
         rows[index].loadFromMap(map);
     }
-
-
-    public void loadFromFile(String path){
-        String stringData = DataReader.readFile(path);
-        String[] stringForms = stringData.split("\n\n");
-
-        for (int i=0; i<stringForms.length; i++){
-            loadFromDataMap(
-                    i, DataReader.getDataMap(stringForms[i])
-            );
-        }
-    }
-
 
 
     @Override

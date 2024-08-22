@@ -36,7 +36,7 @@ public abstract class Form{
         return false;
     }
 
-    private void setTextInput(Field field, String value) throws IllegalAccessException {
+    private void setTextInput(Field field, Object value) throws IllegalAccessException {
         field.set(this, value);
     }
 
@@ -95,7 +95,7 @@ public abstract class Form{
     }
 
 
-    private void setField(Field field, String value) throws IllegalAccessException {
+    private void setField(Field field, Object value) throws IllegalAccessException {
         if (isRequired(field) && Objects.isNull(value)){
             throw new RuntimeException("Missing required field: " + className + "." + field.getName());
         }
@@ -107,20 +107,20 @@ public abstract class Form{
         }
 
         if (field.isAnnotationPresent(RadioInput.class)){
-            setRadioInput(field, value);
+            setRadioInput(field, String.valueOf(value));
         }
 
         if (field.isAnnotationPresent(Select.class)){
-            setSelectOption(field, value);
+            setSelectOption(field, String.valueOf(value));
         }
     }
 
 
-    public void loadFromMap(Map<String, String> map) {
+    public void loadFromMap(Map<String, Object> map) {
         className = this.getClass().getName();
 
         for (Field field: this.getClass().getDeclaredFields()){
-            String value = map.get(field.getName());
+            Object value = map.get(field.getName());
 
             if (isInput(field)){
                 field.setAccessible(true);
@@ -136,17 +136,14 @@ public abstract class Form{
     }
 
     public void loadFromEntity(Object object){
-        Map<String, String> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         for (Field field: object.getClass().getDeclaredFields()){
             try {
                 field.setAccessible(true);
 
                 String name = field.getName();
-                String value = Objects.toString(field.get(object), null);
-                if (value!=null){
-                    value = value.trim();
-                }
+                Object value = field.get(object);
 
                 map.put(name, value);
             }
@@ -157,11 +154,6 @@ public abstract class Form{
 
         loadFromMap(map);
     }
-
-    public void loadFromFile(String path){
-        loadFromMap(DataReader.getDataMapFromFile(path));
-    }
-
 
     public String toString(){
         Field[] fields = this.getClass().getDeclaredFields();
@@ -194,8 +186,8 @@ public abstract class Form{
     }
 
 
-    private void fillTextInput(String value){
-        Keyboard.writeText(value);
+    private void fillTextInput(Object value){
+        Keyboard.writeText(String.valueOf(value));
     }
 
     private void fillRadioInput(boolean value){
@@ -235,7 +227,7 @@ public abstract class Form{
 
                 if (field.get(this)!=null && field.get(this)==input){
                     if (field.isAnnotationPresent(TextInput.class)){
-                        fillTextInput((String) input);
+                        fillTextInput(input);
                     }
 
                     if (field.isAnnotationPresent(RadioInput.class)){

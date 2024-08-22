@@ -20,4 +20,8 @@ public class PersonalDataService {
     public List<PersonalData> getAllPersonalData() {
         return personalDataDao.findAll();
     }
+
+    public List<Long> getAllIds() {
+        return personalDataDao.getAllIds();
+    }
 }

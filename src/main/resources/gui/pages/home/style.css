@@ -56,7 +56,7 @@ ul.users{
     cursor: pointer;
     text-align: center;
     transition: 200ms ease-in-out;
-    padding: 10px 0;
+    height: fit-content;
     margin: 0;
     border-bottom: 1px solid gray;
     background-color: white;
@@ -114,14 +114,15 @@ ul.users{
 .data-wrapper{
     flex-grow: 1;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     max-height: 100vh;
 }
 
 .data{
-    width: 1000px;
+    margin-left: 50px;
 }
+
 
 .data-content{
     width: 100%;
@@ -162,6 +163,10 @@ ul.users{
     letter-spacing: -.25px;
     text-align: center;
     font-weight: 500;
+}
+
+.json-input:focus{
+    background-color: rgba(5, 11, 69, 0.075);
 }
 
 .json-blue{

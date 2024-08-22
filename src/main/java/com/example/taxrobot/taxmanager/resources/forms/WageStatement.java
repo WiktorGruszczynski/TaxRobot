@@ -34,7 +34,7 @@ public class WageStatement extends Form {
     private String arbeitGeber;
 
     @TextInput
-    private String nettolohn;
+    private Long nettolohn;
 
 
     public void fill(){

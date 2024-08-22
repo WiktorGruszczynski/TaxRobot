@@ -22,6 +22,7 @@ class WindowsApi {
     private final static int KEY_UP = 2;
     private final static WinUser.INPUT input = getInput();
     private final static int HWND_TOP = 0;
+    private final static int HWND_NOTOPMOST = -2;
 
     private static WinUser.INPUT getInput(){
         WinUser.INPUT input = new WinUser.INPUT();
@@ -163,16 +164,22 @@ class WindowsApi {
     }
 
     public static void setWindowOnTop(HWND hwnd){
-        setWindowPosition(hwnd, HWND_TOP, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
+        setWindowPosition(hwnd, -1, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
+        setWindowPosition(hwnd, -2, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
     }
 
     public static  void displayWindow(HWND hwnd){
-        System.out.println("restored");
         user32.ShowWindow(hwnd, WinUser.SW_RESTORE);
 
-        setWindowOnTop(hwnd);
+        Keyboard.sleep(50);
 
-        System.out.println("foreground");
+        setWindowOnTop(hwnd);
+        System.out.println("Window on top");
+
+        Keyboard.sleep(120);
+
         user32.SetForegroundWindow(hwnd);
+        user32.SetFocus(hwnd);
+        System.out.println("Window forergound");
     }
 }
