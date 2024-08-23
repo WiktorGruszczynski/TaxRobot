@@ -5,6 +5,7 @@ const wageStatementsOptionElement = document.getElementsByClassName("option")[1]
 const dataContent = document.getElementsByClassName("data-content")[0];
 const dataEl = document.getElementsByClassName("data")[0]
 
+var idList;
 var personalDataArray;
 var userId;
 
@@ -60,17 +61,21 @@ function handleFieldClick(e){
     }
 
 
+    if (e.inputType === "insertParagraph"){
+        target.innerHTML = target.innerText.replaceAll("\n","")
+    }
+
    
 }
 
 
-function fieldBuilder(label, value, editable, sp_char, isNull, color_class){
+function fieldBuilder(label, value, editable, sp_char, isNull, color_class, type){
     return `<div class="field">
-    <h4 class="json-blue">"${label}"</h4>
+    <h4 class="json-blue key">"${label}"</h4>
     <h4>:</h4>    
     <div class="json-input-wrapper">
-        <div class=${color_class}>${sp_char}</div>
-        <div class="json-input ${color_class}" label=${label} isNull=${isNull}  ${editable?"contenteditable":""} spellcheck="false" oninput=handleFieldClick(event)>
+        <div class="${color_class}">${sp_char}</div>
+        <div class="json-input value ${color_class}" label=${label} isNull=${isNull} type=${type}  ${editable?"contenteditable":""} spellcheck="false" oninput=handleFieldClick(event)>
             ${value}
         </div>
         <div class=${color_class}>${sp_char}</div>    
@@ -102,7 +107,12 @@ function jsonField(label, value, editable=true){
         isNull = true
     }
 
-    return fieldBuilder(label, value, editable, sp_char, isNull, color_class)
+    let type = typeof(value);
+    if (value === null){
+        type = "string"
+    }
+
+    return fieldBuilder(label, value, editable, sp_char, isNull, color_class, type)
 }
 
 
@@ -135,13 +145,18 @@ function renderPersonalData(){
 
 }
 
-function handlePersonalDataClick(){
-    personalData = personalDataArray.find(p => p.id==userId)
+async function fetchPersonalData(id){
+    const response = await fetch("http://localhost:8080/api/personal_data/getById/"+id);
+
+    return await response.json();
+}
+
+async function handlePersonalDataClick(){
+    personalData = await fetchPersonalData(userId)
     renderPersonalData()
 }
 
 function addWageStatement(e){
-    console.log(e)
     if (e.inputType != "insertParagraph"){
         e.target.innerHTML = ",";
         return; 
@@ -175,7 +190,6 @@ function renderWageStatements(){
         ctx += buffer
     });
 
-
     
     if (wageStatements.length == 0){
         ctx = '<span class="json-blue arr-add-btn" oninput={addWageStatement(event)} contenteditable>,</span>'
@@ -195,8 +209,8 @@ async function handleWageStatementsClick(){
 
 }
 
-async function fetchUsers(){
-    const response = await fetch("http://localhost:8080/api/personal_data/getAll", {
+async function fetchIds(){
+    const response = await fetch("http://localhost:8080/api/personal_data/getAllIds", {
         headers:{
             "Access-Control-Allow-Origin": "*"
         }
@@ -205,10 +219,18 @@ async function fetchUsers(){
     return await response.json();    
 }
 
+
 async function fetchWagestatements(){
     const response = await fetch("http://localhost:8080/api/wage_statement/getById/"+userId)
 
     return await response.json();
+}
+
+async function saveWageStatements(){
+    const response = await fetch("http://localhost:8080/api/wage_statement", {
+        method: "POST",
+        body: JSON.stringify(wageStatements)
+    })
 }
 
 
@@ -222,15 +244,90 @@ function createEmptyUserForm(){
     renderPersonalData()
 }
 
-function userListElement(user){
+function saveJson(){
+
+}
+
+function saveJsonArray(elemets){
+    const result = [];
+    var arr = [... elemets]
+
+    arr.forEach(el => {
+        const obj = {};
+
+        const fields = [... el.getElementsByClassName("field")]
+        fields.forEach(field => {
+            var key = field.getElementsByClassName("key")[0].innerText.slice(1,-1)
+            var value_field = field.getElementsByClassName("value")[0]
+
+            value = value_field.innerText.replaceAll("\n","")
+
+            const type = value_field.getAttribute("type")
+
+            if (type === "number"){
+                value = Number(value)
+            }
+
+            if (value_field.getAttribute("isNull")){
+                value = null
+            }
+            
+            obj[key] = value
+        })
+
+        result.push(obj)
+    })
+
+    return result;
+}
+
+
+async function updateWageStatements(wage_statements){
+    var post_data = [...(wage_statements.map(el => ({
+        ...el,
+        personalDataId: userId
+    })))]
+
+    const response = await fetch("http://localhost:8080/api/wage_statement", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(post_data)
+    })
+}
+
+async function saveUpdate(){
+    var arr_elements = dataContent.getElementsByClassName("arr-el")
+    var title = dataContent.getElementsByTagName("h3")[0].innerText
+    var dataToSend;
+
+    if (arr_elements.length === 0){
+        saveJson()
+    }
+    else{
+        dataToSend = saveJsonArray(arr_elements)
+    }
+
+
+    if (title === "Wage statements"){
+        await updateWageStatements(dataToSend)
+    }
+
+
+}
+
+
+function userListElement(id){
     const element = document.createElement("li");
-    element.innerText = user.id;
+    element.innerText = id;
     element.classList.add("user_li")
 
-    element.onclick = () => handleUserIdClick(user.id)
+    element.onclick = () => handleUserIdClick(id)
 
     users_list.appendChild(element)
 }
+
 
 function addUserBtn(){
     const element = document.createElement("li")
@@ -242,9 +339,9 @@ function addUserBtn(){
     return element;
 }
 
-function sidebar(users){
-    users.map(user => 
-        userListElement(user)
+function sidebar(ids){
+    ids.map(id => 
+        userListElement(id)
     )
     
     users_list.appendChild(addUserBtn())
@@ -252,20 +349,20 @@ function sidebar(users){
 
 
 async function fetchData(){
-    personalDataArray = await fetchUsers();
+    idList = await fetchIds();
 }
 
 async function render(){
-    sidebar(personalDataArray);
+    sidebar(idList);
 }
 
 
 async function main(){
     await fetchData();
-    userId = personalDataArray[0].id;
+    userId = idList[0];
 
     await render();
-    handlePersonalDataClick()
+    await handlePersonalDataClick()
 }
 
 main()

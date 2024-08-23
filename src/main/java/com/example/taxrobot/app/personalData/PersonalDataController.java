@@ -31,4 +31,9 @@ public class PersonalDataController {
         return personalDataService.getAllIds();
     }
 
+    @GetMapping(path = "/getById/{id}")
+    public PersonalData getPersonalDataById(@PathVariable("id") Long id){
+        return personalDataService.getPersonalDataById(id);
+    }
+
 }

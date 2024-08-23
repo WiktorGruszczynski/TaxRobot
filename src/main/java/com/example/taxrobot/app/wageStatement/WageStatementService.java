@@ -14,7 +14,10 @@ public class WageStatementService {
     }
 
     public List<WageStatement> addWageStatements(List<WageStatement> wageStatements){
-        System.out.println(wageStatements);
+        Long personalDataId = wageStatements.get(0).getPersonalDataId();
+
+        wageStatementDao.deleteAllByPersonalDataId(personalDataId);
+
         return wageStatementDao.saveAll(wageStatements);
     }
 

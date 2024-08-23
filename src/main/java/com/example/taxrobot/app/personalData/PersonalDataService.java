@@ -24,4 +24,8 @@ public class PersonalDataService {
     public List<Long> getAllIds() {
         return personalDataDao.getAllIds();
     }
+
+    public PersonalData getPersonalDataById(Long id) {
+        return personalDataDao.findById(id).orElse(null);
+    }
 }
