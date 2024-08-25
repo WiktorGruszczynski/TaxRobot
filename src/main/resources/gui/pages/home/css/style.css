@@ -125,11 +125,18 @@ ul.users{
     padding-bottom: 40px;
 }
 
-
 .data-content{
     width: 100%;
     color: black; 
 }
+
+
+#request-info{
+    width: 200px;
+    font-size: .85rem;
+    text-align: center;
+}
+
 
 .save-btn{
     width: 200px;

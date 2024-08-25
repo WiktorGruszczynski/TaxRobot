@@ -4,6 +4,7 @@ const personalDataOptionElement = document.getElementsByClassName("option")[0];
 const wageStatementsOptionElement = document.getElementsByClassName("option")[1];
 const dataContent = document.getElementsByClassName("data-content")[0];
 const dataEl = document.getElementsByClassName("data")[0]
+const requestInfo = document.getElementById("request-info")
 
 var idList;
 var personalDataArray;
@@ -29,9 +30,17 @@ const personalDataScheme = {
     beruf: "",
     telefon: "",
     email: "",
+    PID: "",
     pensionskasse: false,
     gemeinde: "",
     gemeinde2: ""
+}
+
+const wageStatementsScheme = {
+    von: "",
+    bis: "",
+    arbeitGeber: "",
+    nettolohn: 0
 }
 
 
@@ -46,9 +55,17 @@ function handleFieldClick(e){
     
         var value = "";
         
+       
         if (e.inputType = "insertText"){
-            value = e.data;
+            if (e.data){
+                value = e.data
+            }
+            else{
+                data = ""
+            }
         }
+
+
     
         parent.innerHTML = (
             `<div class=${color_class}>"</div>
@@ -74,11 +91,11 @@ function fieldBuilder(label, value, editable, sp_char, isNull, color_class, type
     <h4 class="json-blue key">"${label}"</h4>
     <h4>:</h4>    
     <div class="json-input-wrapper">
-        <div class="${color_class}">${sp_char}</div>
+        <div class="${color_class} lq">${sp_char}</div>
         <div class="json-input value ${color_class}" label=${label} isNull=${isNull} type=${type}  ${editable?"contenteditable":""} spellcheck="false" oninput=handleFieldClick(event)>
             ${value}
         </div>
-        <div class=${color_class}>${sp_char}</div>    
+        <div class="${color_class} rq">${sp_char}</div>    
     </div>
 </div>`
 }
@@ -118,7 +135,7 @@ function jsonField(label, value, editable=true){
 
 function renderPersonalData(){
     dataContent.innerHTML = (
-        '<h3>Personal Data</h3>'+
+        '<h3>Personal data</h3>'+
         '<span class="json-blue j-bracket">{</span>'+
         jsonField("id", personalData.id, false)+
         jsonField("name", personalData.name)+
@@ -128,7 +145,7 @@ function renderPersonalData(){
         jsonField("zusatz", personalData.zusatz)+
         jsonField("PLZ", personalData.PLZ)+
         jsonField("ort", personalData.ort)+
-        jsonField("geburtsdatum", personalData.geburtsdatum.split(" ")[0])+
+        jsonField("geburtsdatum", personalData.geburtsdatum?personalData.geburtsdatum.split("T")[0]:null)+
         jsonField("AHVN13", personalData.AHVN13)+
         jsonField("zivilstand", personalData.zivilstand)+
         jsonField("konfession", personalData.konfession)+
@@ -156,49 +173,81 @@ async function handlePersonalDataClick(){
     renderPersonalData()
 }
 
-function addWageStatement(e){
-    if (e.inputType != "insertParagraph"){
-        e.target.innerHTML = ",";
-        return; 
-    }
 
-    wageStatements.push({
-        von: "",
-        bis: "",
-        arbeitGeber: "",
-        nettolohn: 0
-    })
-
+function addWageStatement(){
+    wageStatements.push(wageStatementsScheme)
     renderWageStatements()
 }
 
+function removeWageStatement(target){
+    const index = Number(target.getAttribute("index"));
+    const found_el = [... dataContent.getElementsByClassName("arr-el")]
+        .find(el => Number(el.getAttribute("index"))===index );
+
+    
+    wageStatements.splice(index, 1)
+    found_el?.remove()
+
+    
+
+    if (dataContent.getElementsByClassName("arr-el").length == 0){
+        document.getElementById("json-array").innerHTML = arrSeparator(0)
+    }
+}
+
+function handleSeparatorInput(e){
+    const key = e.key;
+    const target = e.target;
+
+    wageStatements = getJsonArray(document.getElementsByClassName("arr-el"))
+
+    if (key === "Backspace"){
+        removeWageStatement(target)
+    }
+
+    if (key === "Enter"){
+        addWageStatement(target)
+    }
+
+    target.innerText = ","
+    
+    e.preventDefault()
+}
+
+function arrSeparator(index){
+    return `<span class="json-blue arr-add-btn" dir="rtl" index=${index} onkeydown={handleSeparatorInput(event)} contenteditable>,</span>`
+}
 
 function renderWageStatements(){
     var ctx = "";
+    let counter = 0;
 
     wageStatements.forEach(element => {
-        let buffer = '<div class="arr-el"><span class="json-blue j-bracket">{</span>'
+        let buffer = `<div class="arr-el" index=${counter}><span class="json-blue j-bracket">{</span>`
             + jsonField("von", element.von)
             + jsonField("bis", element.bis)
             + jsonField("arbeitGeber", element.arbeitGeber)
             + jsonField("nettolohn", element.nettolohn)
             + '<span class="json-blue j-bracket">}</span>'
-            + '<span class="json-blue arr-add-btn" oninput={addWageStatement(event)} contenteditable>,</span>'
+            + arrSeparator(counter)
             + '</div>'
             
 
         ctx += buffer
+        counter+=1
     });
 
     
     if (wageStatements.length == 0){
-        ctx = '<span class="json-blue arr-add-btn" oninput={addWageStatement(event)} contenteditable>,</span>'
+        ctx = arrSeparator(0)
     }
 
     dataContent.innerHTML = (
         '<h3>Wage statements</h3>'+
         '<span class="json-blue j-bracket">[</span>'+
+        '<span id="json-array">'+
         ctx +
+        '</span>'+
         '<span class="json-blue j-bracket">]</span>'
     )
 }
@@ -231,6 +280,14 @@ async function saveWageStatements(){
         method: "POST",
         body: JSON.stringify(wageStatements)
     })
+
+    if (response.status === 200){
+        requestInfo.innerText = "Succes"
+
+        setInterval(()=>{
+            requestInfo.innerText = ""
+        }, 2500)
+    }
 }
 
 
@@ -244,11 +301,51 @@ function createEmptyUserForm(){
     renderPersonalData()
 }
 
-function saveJson(){
+function valueFromField(field, nullStr=""){
+    var value = field.innerText.replaceAll("\n","")
+    const type = field.getAttribute("type")
+
+
+    if (type === "number"){
+        value = Number(value)
+    }
+
+    if (type === "boolean"){
+        value = value==="true"?true:false
+    }
+
+
+    if (field.getAttribute("isNull")==="true"){
+        value = null
+    }
+
+    if (type === "string"){
+        if (value === ""){
+            value = nullStr
+        }
+    }
+
+    return value;
 
 }
 
-function saveJsonArray(elemets){
+function getJson(){
+    const fields = [... dataContent.getElementsByClassName("field")]
+    const result = {};
+
+    fields.forEach(field => {
+        var key = field.getElementsByClassName("key")[0].innerText.slice(1,-1)
+        var value_field = field.getElementsByClassName("value")[0]
+
+        var value = valueFromField(value_field, "")
+
+        result[key] = value
+    })
+
+    return result;
+}
+
+function getJsonArray(elemets, nullStr=""){
     const result = [];
     var arr = [... elemets]
 
@@ -260,17 +357,8 @@ function saveJsonArray(elemets){
             var key = field.getElementsByClassName("key")[0].innerText.slice(1,-1)
             var value_field = field.getElementsByClassName("value")[0]
 
-            value = value_field.innerText.replaceAll("\n","")
+            var value = valueFromField(value_field, nullStr)
 
-            const type = value_field.getAttribute("type")
-
-            if (type === "number"){
-                value = Number(value)
-            }
-
-            if (value_field.getAttribute("isNull")){
-                value = null
-            }
             
             obj[key] = value
         })
@@ -281,12 +369,19 @@ function saveJsonArray(elemets){
     return result;
 }
 
+function getWagestatementsFromHtml(){
+    return [...(wage_statements.map(el => ({
+        ...el,
+        personalDataId: userId
+    })))]
+}
 
 async function updateWageStatements(wage_statements){
     var post_data = [...(wage_statements.map(el => ({
         ...el,
         personalDataId: userId
     })))]
+
 
     const response = await fetch("http://localhost:8080/api/wage_statement", {
         method: "POST",
@@ -295,18 +390,33 @@ async function updateWageStatements(wage_statements){
         },
         body: JSON.stringify(post_data)
     })
+
+    if (response.status == 200){
+        wageStatements = await fetchWagestatements()
+    }
 }
 
+async function updatePersonalData(personal_data){
+    const response = await fetch("http://localhost:8080/api/personal_data", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(personal_data)
+    })
+}
+
+
 async function saveUpdate(){
-    var arr_elements = dataContent.getElementsByClassName("arr-el")
-    var title = dataContent.getElementsByTagName("h3")[0].innerText
+    var arr_elements = dataContent.getElementsByClassName("arr-el");
+    var title = dataContent.getElementsByTagName("h3")[0].innerText;
     var dataToSend;
 
     if (arr_elements.length === 0){
-        saveJson()
+        dataToSend = getJson()
     }
     else{
-        dataToSend = saveJsonArray(arr_elements)
+        dataToSend = getJsonArray(arr_elements, null)
     }
 
 
@@ -314,6 +424,9 @@ async function saveUpdate(){
         await updateWageStatements(dataToSend)
     }
 
+    if (title === "Personal data"){
+        await updatePersonalData(dataToSend)
+    }
 
 }
 

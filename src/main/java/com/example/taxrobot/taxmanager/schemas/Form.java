@@ -10,6 +10,7 @@ import com.example.taxrobot.tools.Keyboard;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InaccessibleObjectException;
 import java.util.*;
 
 
@@ -35,6 +36,29 @@ public abstract class Form{
 
         return false;
     }
+
+
+    /**
+     * Checks if all required fields are not null
+     */
+    @JsonIgnore
+    public boolean isValid(){
+        for (Field field: this.getClass().getDeclaredFields()){
+            field.setAccessible(true);
+
+            try {
+                if (isRequired(field) && field.get(this)==null){
+                    return false;
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        return true;
+    }
+
+
 
     private void setTextInput(Field field, Object value) throws IllegalAccessException {
         field.set(this, value);

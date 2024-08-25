@@ -6,12 +6,15 @@ import com.example.taxrobot.taxmanager.annotations.Select;
 import com.example.taxrobot.taxmanager.annotations.TextInput;
 import com.example.taxrobot.taxmanager.util.Options;
 import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Date;
 
 
 @Getter
@@ -52,7 +55,7 @@ public class PersonalData extends Form {
     private String ort;
 
     @TextInput
-    private String geburtsdatum;
+    private Date geburtsdatum;
 
     @Column(nullable = false, name = "AHVN13")
     @JsonProperty("AHVN13")

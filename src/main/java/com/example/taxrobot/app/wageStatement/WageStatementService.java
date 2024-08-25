@@ -1,6 +1,7 @@
 package com.example.taxrobot.app.wageStatement;
 
 import com.example.taxrobot.taxmanager.resources.forms.WageStatement;
+import com.example.taxrobot.taxmanager.schemas.Form;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +16,12 @@ public class WageStatementService {
 
     public List<WageStatement> addWageStatements(List<WageStatement> wageStatements){
         Long personalDataId = wageStatements.get(0).getPersonalDataId();
+
+        for (WageStatement wageStatement: wageStatements){
+            if (!wageStatement.isValid()){
+                return wageStatements.stream().filter(Form::isValid).toList();
+            }
+        }
 
         wageStatementDao.deleteAllByPersonalDataId(personalDataId);
 

@@ -25,12 +25,13 @@
 .json-input, .arr-add-btn{
     outline: none;
     border: none;
-    min-width: 2px;
-    padding: 0 1px;
+    min-width: 4px;
     letter-spacing: -.25px;
     text-align: center;
     font-weight: 500;
 }
+
+
 
 .json-input:focus, .arr-add-btn:focus{
     background-color: rgba(5, 11, 69, 0.075);
@@ -55,3 +56,4 @@
 .arr-add-btn{
     padding: 0 5px;
 }
+
