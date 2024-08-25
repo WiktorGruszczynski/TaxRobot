@@ -5,14 +5,14 @@
 Click `Add users` button on id list on and then fill blank data.\
 To save your results click `Save` button on the bottom of the page.
 
-![alt text](images/add%20user.png)
+![alt text](images/add_user.png)
 
 
 ### PersonalData
 
-![alt text](images/pd.png)
+![alt text](images/personal_data.png)
 
 ### WageStatements
 To add or remove WageStatement click `,` character, press `Enter` to add new WageStatement, press `Backspace` to delete selected WageStatement
 
-![alt text](images/wage%20s.png)
+![alt text](images/wage_statement.png)
