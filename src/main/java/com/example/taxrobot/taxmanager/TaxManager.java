@@ -10,7 +10,7 @@ import com.example.taxrobot.tools.Launcher;
 public class TaxManager {
     private final Launcher launcher;
     private final String EXTENSION = ".ptax23";
-    public final PersonalData personalData = new PersonalData();
+    public PersonalData personalData = new PersonalData();
     public final WageStatementTable wageStatementTable = new WageStatementTable();
 
 
@@ -28,13 +28,7 @@ public class TaxManager {
         Keyboard.space();
     }
 
-    private void waitForFormularWindow(){
-        while (!launcher.getCurrentWindowTitle().endsWith(EXTENSION)){
-        }
-    }
-
     private void nextPage(){
-        waitForFormularWindow();
         Keyboard.alrRight();
         Keyboard.sleep(800);
     }
@@ -43,21 +37,33 @@ public class TaxManager {
         Keyboard.tab();
     }
 
-    public void fill(){
-        Keyboard.sleep(1000);
-        selectMainMenuOption(0);
-        waitForFormularWindow();
-        Keyboard.sleep(1000);
-        selectInnerMenuOption(2);
+
+    private void openTargetWindow(){
         Keyboard.sleep(500);
+        Keyboard.space();
+
+        Keyboard.sleep(6500);
+
+        Keyboard.tab(2);
+
+        Keyboard.space();
+
+        Keyboard.sleep(2500);
+    }
+
+    public void fill(){
+        launcher.start();
+        launcher.listen();
+
+        openTargetWindow();
 
         personalData.fill();
-
 
         nextPage();
         next();
 
-
         wageStatementTable.fill();
+
+        launcher.stop();
     }
 }

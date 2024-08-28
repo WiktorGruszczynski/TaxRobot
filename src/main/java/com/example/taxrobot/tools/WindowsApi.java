@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
-class WindowsApi {
+public class WindowsApi {
     private final static User32 user32 = User32.INSTANCE;
     private final static int KEY_DOWN = 0;
     private final static int KEY_UP = 2;
@@ -76,12 +76,6 @@ class WindowsApi {
     }
 
 
-    private static RECT getWindowRect(HWND hwnd){
-        RECT rect = new RECT();
-        user32.GetWindowRect(hwnd, rect);
-        return rect;
-    }
-
 
     public static boolean isWindowMinimized(HWND hwnd){
         RECT rect = getWindowRect(hwnd);
@@ -90,17 +84,12 @@ class WindowsApi {
     }
 
 
-    public static void showWindow(HWND hwnd){
-        user32.ShowWindow(hwnd, WinUser.SW_SHOWNORMAL);
+    public static RECT getWindowRect(HWND hwnd){
+        RECT rect = new RECT();
+        user32.GetWindowRect(hwnd, rect);
+        return rect;
     }
 
-    public static void showWindowMaximized(HWND hwnd){
-        user32.ShowWindow(hwnd, WinUser.SW_MAXIMIZE);
-    }
-
-    public static void setFocus(HWND hwnd){
-        user32.SetFocus(hwnd);
-    }
 
 
     public static HWND getForegroundWindow(){
@@ -122,7 +111,9 @@ class WindowsApi {
     }
 
 
-
+    public static void setCursorPos(int x, int y){
+        user32.SetCursorPos(x, y);
+    }
 
     public static void keyDown(int keycode){
         user32.PostMessage(user32.GetForegroundWindow(), WinUser.WM_KEYDOWN, new WPARAM(keycode), new LPARAM(0));
@@ -171,15 +162,14 @@ class WindowsApi {
     public static  void displayWindow(HWND hwnd){
         user32.ShowWindow(hwnd, WinUser.SW_RESTORE);
 
-        Keyboard.sleep(50);
+        Keyboard.sleep(150);
 
         setWindowOnTop(hwnd);
-        System.out.println("Window on top");
 
-        Keyboard.sleep(120);
-
+        Keyboard.sleep(150);
         user32.SetForegroundWindow(hwnd);
+
+        Keyboard.sleep(150);
         user32.SetFocus(hwnd);
-        System.out.println("Window forergound");
     }
 }

@@ -1,11 +1,14 @@
 package com.example.taxrobot.tools;
 
 
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinDef.HWND;
+
 
 public class Launcher {
     private final String WINDOW_TITLE = "Private Tax 2023 -  Was möchten Sie tun?";
     private final String EXECUTABLE_PATH = "C:\\Program Files (x86)\\Private Tax 2023\\Private Tax 2023.exe";
+    private boolean running = true;
     private HWND hwnd;
 
 
@@ -30,9 +33,7 @@ public class Launcher {
         int currentWindowPid;
         String currentWindowTitle;
 
-
-
-        while (true){
+        while (running){
             HWND foregroundWindow = WindowsApi.getForegroundWindow();
 
             currentWindowPid = WindowsApi.getProcessIdByWindowHandle(foregroundWindow);
@@ -51,8 +52,21 @@ public class Launcher {
                 Keyboard.space();
             }
 
-            Keyboard.sleep(500);
+            Keyboard.sleep(100);
             }
+
+        System.out.println("Finished program");
+    }
+
+    public void clickWindow(HWND hwnd){
+        WinDef.RECT rect = WindowsApi.getWindowRect(hwnd);
+        int width = rect.right - rect.left;
+
+        int x = rect.left + (width/2);
+        int y = rect.top + 30;
+
+        Mouse.setCursorPos(x, y);
+        Mouse.click();
     }
 
     public void start(){
@@ -60,18 +74,16 @@ public class Launcher {
 
         if (hwnd == null){
             launch();
+
+            while (hwnd == null){
+                hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
+            }
         }
 
-        Keyboard.sleep(2500);
-
-        while (hwnd == null){
-            hwnd = WindowsApi.findByTitle(WINDOW_TITLE);
-        }
-
-        System.out.println("Window is here");
-        Keyboard.sleep(500);
+        Keyboard.sleep(250);
 
         WindowsApi.displayWindow(hwnd);
+        clickWindow(hwnd);
 
         Keyboard.sleep(100);
     }
@@ -82,10 +94,7 @@ public class Launcher {
         thread.start();
     }
 
-
-    public String getCurrentWindowTitle(){
-        return WindowsApi.getWindowTitle(
-                WindowsApi.getForegroundWindow()
-        );
+    public void stop(){
+        running = false;
     }
 }

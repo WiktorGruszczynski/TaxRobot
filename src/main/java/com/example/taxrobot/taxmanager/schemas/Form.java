@@ -211,7 +211,12 @@ public abstract class Form{
 
 
     private void fillTextInput(Object value){
-        Keyboard.writeText(String.valueOf(value));
+        if (value instanceof Date date){
+            System.out.println(date.getDate() + "." + date.getMonth() + "" + date.getYear());
+        }
+        else{
+            Keyboard.writeText(String.valueOf(value));
+        }
     }
 
     private void fillRadioInput(boolean value){

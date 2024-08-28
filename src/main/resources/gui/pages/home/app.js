@@ -65,11 +65,9 @@ function handleFieldClick(e){
             }
         }
 
-
-    
         parent.innerHTML = (
             `<div class=${color_class}>"</div>
-            <div class="json-input ${color_class}" contenteditable label=${label} spellcheck="false" oninput=handleFieldClick(event)>${value}</div>
+            <div class="json-input value ${color_class}" contenteditable label=${label} spellcheck="false" oninput=handleFieldClick(event)>${value}</div>
             <div class=${color_class}>"</div>`
         )
         
@@ -333,9 +331,12 @@ function getJson(){
     const fields = [... dataContent.getElementsByClassName("field")]
     const result = {};
 
+    console.log(fields)
+
     fields.forEach(field => {
         var key = field.getElementsByClassName("key")[0].innerText.slice(1,-1)
         var value_field = field.getElementsByClassName("value")[0]
+
 
         var value = valueFromField(value_field, "")
 
@@ -463,6 +464,7 @@ function sidebar(ids){
 
 async function fetchData(){
     idList = await fetchIds();
+    idList = [... idList].sort()
 }
 
 async function render(){

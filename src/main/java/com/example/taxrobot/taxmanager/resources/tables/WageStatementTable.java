@@ -26,17 +26,14 @@ public class WageStatementTable extends Table {
         open();
         move();
 
-        for (Form form:  getRows()){
+        for (Form form: getRows()){
             WageStatement wageStatement = (WageStatement) form;
             wageStatement.fill();
-            sleep(10);
+            sleep(50);
         }
 
         move(4);
         close();
 
-
-
     }
-
 }
