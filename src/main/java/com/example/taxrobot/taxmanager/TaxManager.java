@@ -4,15 +4,18 @@ import com.example.taxrobot.taxmanager.resources.forms.PersonalData;
 import com.example.taxrobot.taxmanager.resources.tables.WageStatementTable;
 import com.example.taxrobot.tools.Keyboard;
 import com.example.taxrobot.tools.Launcher;
+import lombok.Getter;
 
+import java.util.Date;
 
 
 public class TaxManager {
     private final Launcher launcher;
-    private final String EXTENSION = ".ptax23";
     public PersonalData personalData = new PersonalData();
     public final WageStatementTable wageStatementTable = new WageStatementTable();
 
+    @Getter
+    private String filename;
 
     public TaxManager(Launcher launcher){
         this.launcher = launcher;
@@ -30,7 +33,7 @@ public class TaxManager {
 
     private void nextPage(){
         Keyboard.alrRight();
-        Keyboard.sleep(800);
+        Keyboard.sleep(2000);
     }
 
     private void next(){
@@ -42,13 +45,29 @@ public class TaxManager {
         Keyboard.sleep(500);
         Keyboard.space();
 
-        Keyboard.sleep(6500);
+        Keyboard.sleep(7000);
 
         Keyboard.tab(2);
 
         Keyboard.space();
 
         Keyboard.sleep(2500);
+    }
+
+    public void save(){
+        long currentTime = new Date().getTime()%1000;
+
+        filename = personalData.getName()+ "_" +personalData.getVorname() + "_" + currentTime +".ptax23";
+
+        Keyboard.sleep(300);
+
+        Keyboard.altF4();
+        Keyboard.sleep(1500);
+        Keyboard.space();
+        Keyboard.sleep(1500);
+        Keyboard.writeText(filename);
+        Keyboard.tab(2);
+        Keyboard.space();
     }
 
     public void fill(){
@@ -63,6 +82,8 @@ public class TaxManager {
         next();
 
         wageStatementTable.fill();
+
+        save();
 
         launcher.stop();
     }

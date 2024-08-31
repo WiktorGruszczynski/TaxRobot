@@ -8,8 +8,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class TaxrobotApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(TaxrobotApplication.class, args);
-
 	}
-
-
 }

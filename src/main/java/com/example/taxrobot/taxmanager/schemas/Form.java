@@ -95,12 +95,17 @@ public abstract class Form{
         throw new RuntimeException(className + "  " + value + " is not present in options - " + optionsEnum);
     }
 
+    /**
+    * Checks if field of an object is annotated as an input
+    *
+     */
     private boolean isInput(Field field){
         return (field.isAnnotationPresent(TextInput.class) ||
                 field.isAnnotationPresent(RadioInput.class) ||
                 field.isAnnotationPresent(Select.class)
         );
     }
+
 
     private boolean isRequired(Field field) {
         if (field.isAnnotationPresent(TextInput.class)){
@@ -159,6 +164,10 @@ public abstract class Form{
         }
     }
 
+    /**
+     * Loads form from another object
+     *
+     */
     public void loadFromEntity(Object object){
         Map<String, Object> map = new HashMap<>();
 
@@ -209,10 +218,39 @@ public abstract class Form{
         return stringBuilder.toString();
     }
 
+    private String dateToString(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH)+1;
+        int year = cal.get(Calendar.YEAR);
+
+        String dayStr, monthStr;
+
+        if (day<10){
+            dayStr = "0"+day;
+        }
+        else{
+            dayStr = String.valueOf(day);
+        }
+
+        if (month<10){
+            monthStr = "0"+month;
+        }
+        else{
+            monthStr = String.valueOf(month);
+        }
+
+        return dayStr + "." + monthStr + "." + year;
+    }
+
 
     private void fillTextInput(Object value){
         if (value instanceof Date date){
-            System.out.println(date.getDate() + "." + date.getMonth() + "" + date.getYear());
+            Keyboard.writeText(
+                    dateToString(date)
+            );
         }
         else{
             Keyboard.writeText(String.valueOf(value));
@@ -299,5 +337,4 @@ public abstract class Form{
     }
 
     public abstract void fill();
-
 }

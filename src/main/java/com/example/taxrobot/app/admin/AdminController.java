@@ -1,9 +1,9 @@
 package com.example.taxrobot.app.admin;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.io.FileNotFoundException;
 
 @RestController
 @RequestMapping(path = "/api/admin")
@@ -15,9 +15,15 @@ public class AdminController {
     }
 
     @GetMapping(path = "/fill")
-    public void fill(@RequestParam Long id){
-        adminService.fill(id);
+    public String fill(@RequestParam Long id){
+        return adminService.fill(id);
     }
+
+    @GetMapping(path = "/download/{filename}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable("filename") String filename) throws FileNotFoundException {
+        return adminService.downloadFile(filename);
+    }
+
 
 
 }

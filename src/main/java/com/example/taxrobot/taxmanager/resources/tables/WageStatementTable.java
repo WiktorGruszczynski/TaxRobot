@@ -23,6 +23,10 @@ public class WageStatementTable extends Table {
 
 
     public void fill(){
+        if (getRows().length==0){
+            return;
+        }
+
         open();
         move();
 

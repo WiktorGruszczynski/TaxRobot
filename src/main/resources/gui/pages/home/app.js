@@ -14,6 +14,8 @@ var personalData;
 var wageStatements;
 
 
+
+
 const personalDataScheme = {
     id: null,
     name: "",
@@ -70,7 +72,7 @@ function handleFieldClick(e){
             <div class="json-input value ${color_class}" contenteditable label=${label} spellcheck="false" oninput=handleFieldClick(event)>${value}</div>
             <div class=${color_class}>"</div>`
         )
-        
+
         const child = parent.children[1];
         child.focus()
     }
@@ -405,6 +407,10 @@ async function updatePersonalData(personal_data){
         },
         body: JSON.stringify(personal_data)
     })
+
+    if (response.status === 200){
+        window.location.reload()
+    }
 }
 
 
@@ -429,6 +435,20 @@ async function saveUpdate(){
         await updatePersonalData(dataToSend)
     }
 
+}
+
+
+async function handleFillUserData(){
+    const response = await fetch("http://localhost:8080/api/admin/fill?id="+userId, {
+        method: "GET"
+    });
+
+    if (response.status === 200){
+        const filename = await response.text();
+        const url = `http://localhost:8080/api/admin/download/${filename}`;
+
+        window.open(url, "_blank")
+    }
 }
 
 

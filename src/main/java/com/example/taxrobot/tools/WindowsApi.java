@@ -2,26 +2,20 @@ package com.example.taxrobot.tools;
 
 
 import com.sun.jna.Pointer;
-import com.sun.jna.platform.win32.BaseTSD;
-import com.sun.jna.platform.win32.User32;
+import com.sun.jna.platform.win32.*;
 import com.sun.jna.platform.win32.WinDef.*;
 import com.sun.jna.platform.win32.WinDef.HWND;
-import com.sun.jna.platform.win32.WinUser;
+import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.ptr.IntByReference;
 
 
-
-
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-
-
-public class WindowsApi {
+public class WindowsApi{
     private final static User32 user32 = User32.INSTANCE;
+    private final static Kernel32 kernel32 = Kernel32.INSTANCE;
     private final static int KEY_DOWN = 0;
     private final static int KEY_UP = 2;
     private final static WinUser.INPUT input = getInput();
-    private final static int HWND_TOP = 0;
+    private final static int HWND_TOPMOST = -1;
     private final static int HWND_NOTOPMOST = -2;
 
     private static WinUser.INPUT getInput(){
@@ -63,33 +57,11 @@ public class WindowsApi {
     }
 
 
-    public static boolean isForegroundWindow(HWND hwnd){
-        return Objects.equals(
-                user32.GetForegroundWindow(),
-                hwnd
-        );
-    }
-
-
-    public static void setForegroundWindow(HWND hwnd){
-        user32.SetForegroundWindow(hwnd);
-    }
-
-
-
-    public static boolean isWindowMinimized(HWND hwnd){
-        RECT rect = getWindowRect(hwnd);
-
-        return  (rect.left<0 && rect.bottom<0 && rect.right<0 && rect.top<0);
-    }
-
-
     public static RECT getWindowRect(HWND hwnd){
         RECT rect = new RECT();
         user32.GetWindowRect(hwnd, rect);
         return rect;
     }
-
 
 
     public static HWND getForegroundWindow(){
@@ -125,29 +97,33 @@ public class WindowsApi {
 
 
 
+    private static void sendInput(DWORD dword, WinUser.INPUT[] inputs, int i){
+        user32.SendInput(dword, inputs, i);
+        Keyboard.sleep(10);
+    }
 
-    public static void combination(int keycode1, int keycode2) {
+    public static void hotkey(int keycode1, int keycode2) {
         input.input.ki.wVk = new WORD(keycode1);
         input.input.ki.dwFlags = new DWORD(KEY_DOWN);
 
 
-        user32.SendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
+        sendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
 
         input.input.ki.wVk = new WORD(keycode2);
         input.input.ki.dwFlags = new DWORD(KEY_DOWN );
 
-        user32.SendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
+        sendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
 
 
         input.input.ki.wVk = new WORD(keycode1);
         input.input.ki.dwFlags = new DWORD(KEY_UP);
 
-        user32.SendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
+        sendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
 
         input.input.ki.wVk = new WORD(keycode2);
         input.input.ki.dwFlags = new DWORD(KEY_UP);
 
-        user32.SendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
+        sendInput(new DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
     }
 
     public static void setWindowPosition(HWND hwnd, int hwndInsertAfter, int x, int y, int cx, int cy, int flags){
@@ -155,11 +131,11 @@ public class WindowsApi {
     }
 
     public static void setWindowOnTop(HWND hwnd){
-        setWindowPosition(hwnd, -1, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
-        setWindowPosition(hwnd, -2, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
+        setWindowPosition(hwnd, HWND_TOPMOST, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
+        setWindowPosition(hwnd, HWND_NOTOPMOST, 0, 0, 0, 0, WinUser.SWP_NOMOVE | WinUser.SWP_NOSIZE);
     }
 
-    public static  void displayWindow(HWND hwnd){
+    public static void displayWindow(HWND hwnd){
         user32.ShowWindow(hwnd, WinUser.SW_RESTORE);
 
         Keyboard.sleep(150);
@@ -171,5 +147,15 @@ public class WindowsApi {
 
         Keyboard.sleep(150);
         user32.SetFocus(hwnd);
+    }
+
+
+    public static void terminateProcess(int PID) {
+        HANDLE procHandle = kernel32.OpenProcess(Kernel32.PROCESS_TERMINATE, false, PID);
+
+        if (procHandle != null) {
+            kernel32.TerminateProcess(procHandle, 0);
+        }
+
     }
 }

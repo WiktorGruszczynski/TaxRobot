@@ -35,7 +35,7 @@ public class Keyboard {
 
     public static void tab(){
         pressKeycodes(KeyEvent.VK_TAB);
-        sleep(50);
+        sleep(80);
     }
 
     public static void tab(int steps){
@@ -45,8 +45,12 @@ public class Keyboard {
     }
 
     public static void shiftTab(){
-        WindowsApi.combination(KeyEvent.VK_SHIFT, KeyEvent.VK_TAB);
+        WindowsApi.hotkey(KeyEvent.VK_SHIFT, KeyEvent.VK_TAB);
         sleep(20);
+    }
+
+    public static void altF4(){
+        WindowsApi.hotkey(KeyEvent.VK_ALT, KeyEvent.VK_F4);
     }
 
     public static void space(){
@@ -89,10 +93,10 @@ public class Keyboard {
     }
 
     public static void altLeft(){
-        WindowsApi.combination(KeyEvent.VK_ALT, KeyEvent.VK_LEFT);
+        WindowsApi.hotkey(KeyEvent.VK_ALT, KeyEvent.VK_LEFT);
     }
 
     public static void alrRight() {
-        WindowsApi.combination(KeyEvent.VK_ALT, KeyEvent.VK_RIGHT);
+        WindowsApi.hotkey(KeyEvent.VK_ALT, KeyEvent.VK_RIGHT);
     }
 }

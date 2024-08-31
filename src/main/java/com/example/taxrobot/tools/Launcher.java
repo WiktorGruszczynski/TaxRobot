@@ -12,6 +12,7 @@ public class Launcher {
     private HWND hwnd;
 
 
+
     public Launcher(){
     }
 
@@ -26,6 +27,9 @@ public class Launcher {
         }
     }
 
+    private void terminateApplication(int PID){
+        WindowsApi.terminateProcess(PID);
+    }
 
     private void isAlive(){
         Keyboard.sleep(250);
@@ -39,12 +43,13 @@ public class Launcher {
             currentWindowPid = WindowsApi.getProcessIdByWindowHandle(foregroundWindow);
             currentWindowTitle = WindowsApi.getWindowTitle(foregroundWindow);
 
-
             if (currentWindowPid!=PID){
+                terminateApplication(PID);
                 throw new RuntimeException("Program Interrupted");
             }
 
             if (currentWindowTitle.equals("Probleme")){
+                terminateApplication(PID);
                 throw new RuntimeException("Problem occured while filling tax declaration");
             }
 
@@ -52,7 +57,7 @@ public class Launcher {
                 Keyboard.space();
             }
 
-            Keyboard.sleep(100);
+            Keyboard.sleep(50);
             }
 
         System.out.println("Finished program");
@@ -95,6 +100,7 @@ public class Launcher {
     }
 
     public void stop(){
+        Keyboard.sleep(105);
         running = false;
     }
 }

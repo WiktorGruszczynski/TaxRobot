@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     margin-left: var(--tab-width);
-    height: 28px;
+    height: 26px;
     font-family: "Inconsolata", monospace !important;
 }
 
