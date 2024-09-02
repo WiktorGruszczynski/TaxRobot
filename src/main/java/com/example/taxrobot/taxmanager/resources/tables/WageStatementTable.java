@@ -1,7 +1,5 @@
 package com.example.taxrobot.taxmanager.resources.tables;
 
-
-
 import com.example.taxrobot.taxmanager.resources.forms.WageStatement;
 import com.example.taxrobot.taxmanager.schemas.Form;
 import com.example.taxrobot.taxmanager.schemas.Table;

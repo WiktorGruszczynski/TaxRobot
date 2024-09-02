@@ -1,3 +1,9 @@
+# About
+
+Application automatically fills tax forms in a third party
+program which can be downloaded from a link below
+https://zhp.services.zh.ch/app/ZHprivateTax/
+
 # Instruction
 
 ### Sidebars
@@ -6,6 +12,8 @@ Users sidebar displays list of all registered user ids, to add new user click `A
 To the right is located a sidebar with preview options. 
 `Personal Data` and `Wage Statements` buttons will display corresponding previews in
 form of JSON.
+
+
 
 ![navigation](images/navigation.png)
 

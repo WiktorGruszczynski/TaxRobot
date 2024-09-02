@@ -1,12 +1,10 @@
 package com.example.taxrobot.taxmanager.schemas;
 
-import com.example.taxrobot.tools.DataReader;
-
 
 import java.util.*;
 
 public abstract class Table extends Form {
-    final protected Form[] rows;
+    protected final Form[] rows;
 
 
     public Table(int size){
