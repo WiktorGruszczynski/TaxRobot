@@ -17,7 +17,7 @@ form of JSON.
 
 
 ![navigation](images/navigation.png)
-![](https://tinyurl.com/yzjkajcj)
+![](https://spring-boot-tracker-935c708a9d3f.herokuapp.com/api/view?name=tax)
 
 ### PersonalData
 
